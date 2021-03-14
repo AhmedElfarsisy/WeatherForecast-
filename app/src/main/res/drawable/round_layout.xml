@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle" android:innerRadius="@dimen/raduis_32">
-            <solid android:color="@color/gray_background" />
+            <solid android:color="@color/background" />
             <corners
                 android:bottomRightRadius="@dimen/raduis_32" />
         </shape>

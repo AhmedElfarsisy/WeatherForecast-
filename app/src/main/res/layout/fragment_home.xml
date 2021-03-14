@@ -8,21 +8,19 @@
         <variable
             name="mHomeViewModel"
             type="com.iti.elfarsisy.mad41.myapplication.ui.home.HomeViewModel" />
-
-        <variable
-            name="mCurrentWeather"
-            type="com.iti.elfarsisy.mad41.myapplication.data.model.Current" />
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_background"
+        android:background="@color/white"
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/motion_main_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layoutDescription="@xml/fragment_home_scene">
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -31,6 +29,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5
+"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,7 +49,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout"
+                android:id="@+id/weather_monitor_constraintL_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_24"
@@ -175,23 +175,23 @@
                 android:layout_marginStart="@dimen/margin_24"
                 android:layout_marginTop="@dimen/margin_16"
                 android:layout_marginEnd="@dimen/margin_24"
-                android:background="@color/gray_background"
                 app:cardCornerRadius="@dimen/raduis_32"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/current_weather_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/current_weather_card_background">
 
                     <TextView
                         android:id="@+id/textView3"
+                        fullDateParser="@{mHomeViewModel.weatherResponseLive.current.dt}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/round_date_txt"
-                        android:text="Monday,12 June"
                         android:textColor="@color/black"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -213,12 +213,12 @@
 
                     <TextView
                         android:id="@+id/textView5"
+                        tempWithDegreeSymbol="@{mHomeViewModel.weatherResponseLive.current.temp}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@{mHomeViewModel.weatherResponseLive.current.temp.toString()}"
                         android:textColor="@color/white"
                         android:textSize="@dimen/txt_size_64"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -227,15 +227,16 @@
 
                     <ImageView
                         android:id="@+id/imageView2"
-                        weatherIcon="@{mHomeViewModel.weatherResponseLive.current.icon}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        weatherIcon="@{mHomeViewModel.weatherResponseLive.current.weather.get(0).icon}"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
                         android:layout_marginTop="@dimen/margin_16"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView5"
                         app:srcCompat="@drawable/ic_weather" />
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -244,18 +245,17 @@
             <TextView
                 android:id="@+id/textView15"
                 style="@style/home_header_tv_style"
+                android:layout_marginTop="16dp"
                 android:text="@string/today"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/weather_monitor_constraintL_layout" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/todayRecyclerView"
+                hourlyDataset="@{mHomeViewModel.hourlyResponseLive}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_16"
-                android:layout_marginTop="@dimen/margin_16"
-                android:layout_marginEnd="@dimen/margin_16"
-                android:background="@color/gray_background"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal"
                 android:padding="@dimen/padding_8"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -280,12 +280,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/todayRecyclerView" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/daily_recycler"
+                dailyDataset="@{mHomeViewModel.dailyResponseLive}"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_8"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"

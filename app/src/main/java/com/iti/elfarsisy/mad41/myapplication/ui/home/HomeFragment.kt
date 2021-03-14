@@ -12,7 +12,6 @@ import com.iti.elfarsisy.mad41.myapplication.data.repo.WeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
-
     //fragment Extension
     private val homeViewModel by viewModels<HomeViewModel> {
         HomeViewModelFactory(WeatherRepo())
@@ -25,7 +24,7 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         binding.mHomeViewModel = homeViewModel
-        binding.lifecycleOwner = this
+        binding.setLifecycleOwner(this)
 
         return binding.root
     }

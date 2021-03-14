@@ -79,12 +79,17 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
     //picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+    //Glide
 
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     // timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
 //The Fragment KTX module provides a number of extensions to simplify the fragment API.
     implementation "androidx.fragment:fragment-ktx:1.3.1"
+
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
 
 
 }
