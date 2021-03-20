@@ -7,16 +7,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.iti.elfarsisy.mad41.myapplication.R
+import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
+import com.iti.elfarsisy.mad41.myapplication.data.repo.WeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.databinding.SettingsFragmentBinding
+import com.iti.elfarsisy.mad41.myapplication.ui.home.HomeViewModel
+import com.iti.elfarsisy.mad41.myapplication.ui.home.HomeViewModelFactory
+import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 
 class SettingsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = SettingsFragment()
+    //fragment Extension
+    private val viewModel by viewModels<SettingsViewModel> {
+        SettingViewModelFactory(UserSettingRepo(MyApplication.getContext()))
     }
-
-    private lateinit var viewModel: SettingsViewModel
     private lateinit var binding: SettingsFragmentBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,9 +35,16 @@ class SettingsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
         binding.mSettingViewModel = viewModel
         binding.lifecycleOwner = this
+
+        viewModel.navigatorToMap.observe(viewLifecycleOwner, Observer { isNavigate ->
+            if (isNavigate) {
+                val action = SettingsFragmentDirections.actionNavSettingsFragmentToMapFragment2()
+                findNavController().navigate(action)
+                viewModel.commpletNavigation();
+            }
+        })
     }
 
 }

@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.iti.elfarsisy.mad41.myapplication.data.model.DailyItem
 import com.iti.elfarsisy.mad41.myapplication.data.model.HourlyItem
+import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
 import com.iti.elfarsisy.mad41.myapplication.data.source.remote.NetworkState
-import com.iti.elfarsisy.mad41.myapplication.helper.WEATHER_IMAGE_BASE_URL
+import com.iti.elfarsisy.mad41.myapplication.helper.*
 import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -19,11 +20,22 @@ import java.util.*
 //attach DegreeSymbol to temp degree
 @BindingAdapter("tempWithDegreeSymbol")
 fun attachDegreeSymbol(textView: TextView, temp: Double?) {
+    val userSetting = UserSettingRepo(MyApplication.getContext())
+    val readTemp = userSetting.read(TEMP_MEASUREMENT_KEY, TEMP_CELSIUS_VALUES)
     temp?.let {
-        val toString = it.toInt().toString()
-        textView.text = "$toString \u2103"
-    }
+        when (readTemp) {
+            TEMP_CELSIUS_VALUES -> {
+                textView.text = "${it.toInt()}\u2103"
+            }
+            TEMP_FAHRENHEIT_VALUES -> {
+                textView.text = "${it.toInt()}\u2109"
+            }
+            TEMP_KELVIN_VALUES -> {
+                textView.text = "${it.toInt()}\u212A"
+            }
+        }
 
+    }
 
 }
 
@@ -41,24 +53,58 @@ fun parseTimeStamp(textView: TextView, timeStamp: Int) {
 //bind weather Icon
 @BindingAdapter("weatherIcon")
 fun bindWeatherIcon(weatherImageView: ImageView, path: String?) {
-    Glide.with(MyApplication.getContext()).load("$WEATHER_IMAGE_BASE_URL$path.png")
-        .into(weatherImageView)
+    path?.let {
+        Glide.with(MyApplication.getContext()).load("$WEATHER_IMAGE_BASE_URL$path@2x.png")
+            .into(weatherImageView)
+    }
 }
+//UNITS_METRIC
+//to get Celsius and wind speed in meter/sec From API
+//Imperial
+//to get Fahrenheit and wind speed in miles/hour from API
+//to get Kelvin and wind speed in meter/sec from API from API
 
-//bind Wind speed
+//region bind Wind speed
 @BindingAdapter("windSpeed")
 fun bindWindSpeed(textView: TextView, windSpeed: Double?) {
+    val userSetting = UserSettingRepo(MyApplication.getContext())
+    val readTemp = userSetting.read(TEMP_MEASUREMENT_KEY, TEMP_CELSIUS_VALUES)
+    val readWindSpeed = userSetting.read(WIND_SPEED_MEASUREMENT_KEY, WIND_SPEED_METER_SEC_VALUES)
+
+    windSpeed?.let {
+        if (readTemp == TEMP_CELSIUS_VALUES) {
+            if (readWindSpeed == WIND_SPEED_METER_SEC_VALUES) {
+                textView.text = "${windSpeed}\nm/sec"
+            } else {
+                textView.text = "${windSpeed?.times(0.4)}\nmile/hr"
+
+            }
+        } else if (readTemp == TEMP_FAHRENHEIT_VALUES || readTemp == TEMP_KELVIN_VALUES) {
+            if (readWindSpeed == WIND_SPEED_MILE_HOURE_VALUES) {
+                textView.text = "${windSpeed}\nmile/h"
+            } else {
+                textView.text = "${windSpeed?.times(2.2)}\nm/sec"
+            }
+        }
+    }
 }
+//endregion
 
 //bind visibility Distance
 @BindingAdapter("visibilityDistance")
 fun bindVisibility(textView: TextView, visibility: Int?) {
+    visibility?.let {
+        textView.text = "${visibility?.div(1000)}km"
+    }
 }
 
 
 //bind Humidity in air
 @BindingAdapter("HumidityInAir")
 fun bindHumidity(textView: TextView, humidity: Int?) {
+    humidity?.let {
+        textView.text = "$humidity%"
+    }
 }
 
 //parse just day name from Timestamp
@@ -73,10 +119,12 @@ fun bindDay(textView: TextView, timeStamp: Int) {
 
 @BindingAdapter("fullDateParser")
 fun bindDate(textView: TextView, timeStamp: Int) {
-    val simpleDateFormat = SimpleDateFormat("EEEE,dd-MM")
-    val netDate = Date(timeStamp * 1000L)
-    val date = simpleDateFormat.format(netDate)
-    textView.text = date
+    timeStamp?.let {
+        val simpleDateFormat = SimpleDateFormat("EEEE,dd-MM")
+        val netDate = Date(timeStamp * 1000L)
+        val date = simpleDateFormat.format(netDate)
+        textView.text = date
+    }
 }
 
 @BindingAdapter("ApiStatus")

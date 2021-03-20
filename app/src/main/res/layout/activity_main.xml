@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -20,8 +19,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:itemIconTint="@color/dark_primary"
-        app:itemTextColor="@color/dark_primary"
+        app:itemIconTint="@color/primaryHelper"
+        app:itemTextColor="@color/primaryHelper"
         app:headerLayout="@layout/nav_header_main"
         app:itemBackground="@drawable/selector_indicator"
         app:menu="@menu/activity_main_drawer" />

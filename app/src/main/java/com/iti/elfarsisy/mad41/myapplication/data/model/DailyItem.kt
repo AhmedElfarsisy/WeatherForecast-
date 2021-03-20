@@ -29,7 +29,7 @@ data class DailyItem(
 	val dt: Int? = null,
 
 	@field:SerializedName("pop")
-	val pop: Int? = null,
+	val pop: Double? = null,
 
 	@field:SerializedName("wind_deg")
 	val windDeg: Int? = null,

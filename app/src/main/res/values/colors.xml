@@ -14,12 +14,14 @@
     <color name="primaryHelper">#cd122d</color>
     <color name="secondary">#fdc52c</color>
 
+    <color name="helperDark">#792854</color>
+    <color name="moov">#593064</color>
 
     <!--    <color name="dark_primary">#FBC2EB</color>-->
     <!--    <color name="main_primary">#bdbbbf</color>-->
     <!--    <color name="primary">#858a92</color>-->
 <!--        <color name="light_primary">#78A3EB</color>-->
-    <!--    <color name="background">#ffffff</color>-->
+<!--        <color name="background">#ffffff</color>-->
     <!--    &lt;!&ndash;    9CBFFA&ndash;&gt;-->
     <!--    <color name="dark_secondary">#FFC107</color>-->
     <!--    &lt;!&ndash;    #fac620&ndash;&gt;-->
@@ -29,7 +31,7 @@
     <!--    <color name="main_primary">#bdbbbf</color>-->
     <!--    <color name="primary">#858a92</color>-->
     <!--    <color name="light_primary">#e2e8ee</color>-->
-    <!--    <color name="background">#F4F5F6</color>-->
+        <color name="background">#F7FAFD</color>
     <!--    <color name="dark_secondary">#FFC107</color>-->
 
 

@@ -18,4 +18,5 @@ class UserSettingRepo(private val context: Context) {
         editor.putString(key, value).commit()
 
     }
+
 }

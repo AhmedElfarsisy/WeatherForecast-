@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="@dimen/raduis_24" />
     <gradient
         android:angle="135"
-        android:startColor="@color/moov"
-        android:endColor="@color/primaryHelper" />
+        android:endColor="@color/primaryHelper"
+        android:startColor="@color/primaryVariant" />
 </shape>

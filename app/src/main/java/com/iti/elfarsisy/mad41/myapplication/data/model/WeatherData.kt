@@ -20,7 +20,7 @@ data class WeatherData(
 	val daily: List<DailyItem?>? = null,
 
 	@field:SerializedName("lon")
-	val lon: Int? = null,
+	val lon: Double? = null,
 
 	@field:SerializedName("hourly")
 	val hourly: List<HourlyItem?>? = null,
@@ -29,5 +29,5 @@ data class WeatherData(
 	val minutely: List<MinutelyItem?>? = null,
 
 	@field:SerializedName("lat")
-	val lat: Int? = null
+	val lat: Double? = null
 ) : Parcelable

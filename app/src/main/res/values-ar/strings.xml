@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WeatherForcast</string>
+    <string name="action_settings">الاعدادات</string>
+    <string name="menu_home">الرئيسية</string>
+    <string name="alerts">التنبيهات</string>
+    <string name="favorite">المفضلة</string>
+    <string name="visibility">الرؤية</string>
+    <string name="next_week">"الاسبوع القادم "</string>
+    <string name="today">اليوم</string>
+    <string name="location">الموقع</string>
+    <string name="map">الخريطه</string>
+    <string name="gps">موقعى الحالى</string>
+    <string name="wind_speed">"سرعة الرياح "</string>
+    <string name="meter_sec">متر/الثانية</string>
+    <string name="mile_hr">ميل/الثانية</string>
+    <string name="temperature">درجه الحرارة</string>
+    <string name="arabic">العربية</string>
+    <string name="english">الانجليزية</string>
+    <string name="language">اللغة</string>
+    <string name="fahrenheit">فهرنهايت</string>
+    <string name="keliven">كلفن.</string>
+    <string name="celsius">"سيلسيوس "</string>
+</resources>

@@ -5,7 +5,7 @@
             <corners
                 android:bottomRightRadius="@dimen/raduis_32"
                 android:topRightRadius="@dimen/raduis_32" />
-            <solid android:color="@color/background" />
+            <solid android:color="@color/primaryVariantLight" />
         </shape>
     </item>
 </layer-list>

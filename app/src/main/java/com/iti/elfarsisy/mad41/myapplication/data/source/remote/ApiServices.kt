@@ -20,13 +20,13 @@ object WeatherApi {
 
 
 interface WeatherApiServices {
-    @GET("data/2.5/onecall")
+    @GET("onecall")
     suspend fun fetchWeatherData(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
+        @Query("lang") lang: String = "en",
         @Query("exclude") exclude: String = EXCLUDE_MINUTELY,
         @Query("units") units: String = UNITS_STANDERD,
-        @Query("lang") lang: String = "en",
-        @Query("appid") appID: String = APP_ID
+        @Query("appid") appID: String
     ): Response<WeatherData>
 }

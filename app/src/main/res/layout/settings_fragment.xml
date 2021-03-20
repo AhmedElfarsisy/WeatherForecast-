@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -7,22 +8,244 @@
         <variable
             name="mSettingViewModel"
             type="com.iti.elfarsisy.mad41.myapplication.ui.settings.SettingsViewModel" />
-
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
         tools:context=".ui.settings.SettingsFragment">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Hello Settings"
-            android:textSize="24sp"
-            android:textColor="@color/white"/>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_16"
+            android:layout_marginStart="16dp"
+            android:background="@color/primaryVariant"
+            app:cardCornerRadius="@dimen/raduis_16"
+            app:layout_constraintEnd_toStartOf="@+id/cardView3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </FrameLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_card"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:gravity="center_horizontal"
+                    android:text="@string/location"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txt_size_22" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RadioButton
+
+                        android:id="@+id/mapRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8"
+                        android:checked="@{mSettingViewModel.locationMethod.equals(`MAP`)? true:false}"
+                        android:onClick="@{()->mSettingViewModel.chooseLocationMap()}"
+                        android:text="@string/map"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/gpsRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8"
+                        android:checked="@{mSettingViewModel.locationMethod.equals(`GPS`)? true:false}"
+                        android:onClick="@{()->mSettingViewModel.chooseLocationGPS()}"
+                        android:text="@string/gps"
+                        android:textColor="@color/white" />
+                </RadioGroup>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_16"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="@dimen/raduis_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_card"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:gravity="center_horizontal"
+                    android:text="@string/wind_speed"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txt_size_22" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RadioButton
+                        android:id="@+id/meterRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8"
+                        android:checked="@{mSettingViewModel.windMeasure.equals(`meter/sec`)? true:false}"
+                        android:onClick="@{()->mSettingViewModel.chooseWindSpeedMeter()}"
+                        android:text="@string/meter_sec"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/mileRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8"
+                        android:checked="@{mSettingViewModel.windMeasure.equals(`miles/hour`)?true:false}"
+                        android:onClick="@{()->mSettingViewModel.chooseWindSpeedMile()}"
+                        android:text="@string/mile_hr"
+
+                        android:textColor="@color/white" />
+                </RadioGroup>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewTemp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_16"
+            android:background="@color/primaryVariant"
+            app:cardCornerRadius="@dimen/raduis_16"
+            app:layout_constraintEnd_toStartOf="@+id/langCardView"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_card"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:gravity="center_horizontal"
+                    android:text="@string/temperature"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txt_size_22" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RadioButton
+                        android:id="@+id/kelivenRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8"
+                        android:checked="@{mSettingViewModel.tempMeasure.equals(`kelvin`)? true:false}"
+                        android:onClick="@{()->mSettingViewModel.chooseTempKelvin()}"
+                        android:text="@string/keliven"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/celisusRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8"
+                        android:checked="@{mSettingViewModel.tempMeasure.equals(`Celsius`)? true:false}"
+                        android:onClick="@{()->mSettingViewModel.chooseTempCELSIUS()}"
+                        android:text="@string/celsius"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/fahrenheitRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8"
+                        android:checked="@{mSettingViewModel.tempMeasure.equals(`Fahrenheit`)? true:false}"
+                        android:onClick="@{()->mSettingViewModel.chooseTempFahrenheit()}"
+                        android:text="@string/fahrenheit"
+                        android:textColor="@color/white" />
+                </RadioGroup>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/langCardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_16"
+            app:cardCornerRadius="@dimen/raduis_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/cardViewTemp"
+            app:layout_constraintTop_toBottomOf="@+id/cardView3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_card"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:gravity="center_horizontal"
+                    android:text="@string/language"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txt_size_22" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RadioButton
+                        android:id="@+id/englishRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8"
+                        android:checked="@{mSettingViewModel.language.equals(`en`)? true:false}"
+                        android:onClick="@{()->mSettingViewModel.chooseEnglish()}"
+                        android:text="@string/english"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/tempRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_8"
+                        android:checked="@{mSettingViewModel.language.equals(`ar`)? true:false}"
+                        android:onClick="@{()->mSettingViewModel.chooseArabic()}"
+                        android:text="@string/arabic"
+                        android:textColor="@color/white" />
+                </RadioGroup>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -2,9 +2,12 @@ package com.iti.elfarsisy.mad41.myapplication.util
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration
+import android.view.ContextThemeWrapper
 import com.iti.elfarsisy.mad41.myapplication.BuildConfig
 import timber.log.Timber
 import timber.log.Timber.DebugTree
+import java.util.*
 
 /*
 * Class MyApplication
@@ -25,5 +28,6 @@ class MyApplication : Application() {
         private lateinit var INSTANCE: Context
         fun getContext() = INSTANCE
     }
+
 
 }
