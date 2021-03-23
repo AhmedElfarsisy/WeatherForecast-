@@ -33,5 +33,9 @@
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="google_maps_key" translatable="false">AIzaSyDaVJYFL9TuzFfODiVOlcGbFA2r_uW0CfU</string>
 <string name="mile_format" translatable="false">%s\nmile/hr</string>
-<!--    @{@string/quote_format(gameViewModel.word)-->
+    <string name="pick_location">pick location</string>
+    <string name="add_location_btn">Add Location</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <!--    @{@string/quote_format(gameViewModel.word)-->
 </resources>

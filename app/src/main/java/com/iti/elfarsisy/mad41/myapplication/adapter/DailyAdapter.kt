@@ -35,4 +35,5 @@ class DailyAdapter : ListAdapter<DailyItem, DailyAdapter.DailyHolder>(DiffCallBa
             oldItem.dt == newItem.dt
     }
 
+
 }

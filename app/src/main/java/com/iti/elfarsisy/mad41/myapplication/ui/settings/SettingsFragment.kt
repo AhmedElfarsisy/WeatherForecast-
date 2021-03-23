@@ -40,9 +40,9 @@ class SettingsFragment : Fragment() {
 
         viewModel.navigatorToMap.observe(viewLifecycleOwner, Observer { isNavigate ->
             if (isNavigate) {
-                val action = SettingsFragmentDirections.actionNavSettingsFragmentToMapFragment2()
+                val action = SettingsFragmentDirections.actionNavSettingsFragmentToMapFragment2(0)
                 findNavController().navigate(action)
-                viewModel.commpletNavigation();
+                viewModel.completNavigation()
             }
         })
     }

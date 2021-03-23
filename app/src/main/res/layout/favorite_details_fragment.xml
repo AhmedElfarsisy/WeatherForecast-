@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
-            name="mHomeViewModel"
-            type="com.iti.elfarsisy.mad41.myapplication.ui.home.HomeViewModel" />
+            name="mViewModel"
+            type="com.iti.elfarsisy.mad41.myapplication.ui.favoritedetails.FavoriteDetailsViewModel" />
+
     </data>
 
     <ScrollView
@@ -25,7 +25,7 @@
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyle"
-                ApiStatus="@{mHomeViewModel.networkState}"
+                ApiStatus="@{mViewModel.networkState}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +40,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{mHomeViewModel.cityLive}"
+                android:text="@{mViewModel.cityLive}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/city_title"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
             <TextView
 
                 android:id="@+id/textView3"
-                fullDateParser="@{mHomeViewModel.weatherResponseLive.current.dt}"
+                fullDateParser="@{mViewModel.weatherResponseLive.current.dt}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -93,7 +93,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@{mHomeViewModel.weatherResponseLive.current.weather.get(0).description.toString()}"
+                        android:text="@{mViewModel.weatherResponseLive.current.weather.get(0).description.toString()}"
                         android:textColor="@color/white"
                         android:textSize="@dimen/txt_size_24"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +102,7 @@
 
                     <TextView
                         android:id="@+id/textView5"
-                        tempWithDegreeSymbol="@{mHomeViewModel.weatherResponseLive.current.temp}"
+                        tempWithDegreeSymbol="@{mViewModel.weatherResponseLive.current.temp}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -116,7 +116,7 @@
 
                     <ImageView
                         android:id="@+id/imageView2"
-                        weatherIcon="@{mHomeViewModel.weatherResponseLive.current.weather.get(0).icon}"
+                        weatherIcon="@{mViewModel.weatherResponseLive.current.weather.get(0).icon}"
                         android:layout_width="96dp"
                         android:layout_height="96dp"
                         android:layout_marginTop="@dimen/margin_16"
@@ -211,7 +211,7 @@
                     <TextView
                         android:id="@+id/windSpeed"
                         style="@style/weather_info_text_view"
-                        windSpeed="@{mHomeViewModel.weatherResponseLive.current.windSpeed}"
+                        windSpeed="@{mViewModel.weatherResponseLive.current.windSpeed}"
                         android:layout_marginTop="16dp"
                         android:gravity="center"
                         app:layout_constraintEnd_toEndOf="@+id/imageView4"
@@ -221,7 +221,7 @@
                     <TextView
                         android:id="@+id/textView9"
                         style="@style/weather_info_text_view"
-                        HumidityInAir="@{mHomeViewModel.weatherResponseLive.current.humidity}"
+                        HumidityInAir="@{mViewModel.weatherResponseLive.current.humidity}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -232,7 +232,7 @@
                     <TextView
                         android:id="@+id/textView10"
                         style="@style/weather_info_text_view"
-                        visibilityDistance="@{mHomeViewModel.weatherResponseLive.current.visibility}"
+                        visibilityDistance="@{mViewModel.weatherResponseLive.current.visibility}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -247,7 +247,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
-                        android:text="@{mHomeViewModel.weatherResponseLive.current.clouds.toString().concat(` %`)}"
+                        android:text="@{mViewModel.weatherResponseLive.current.clouds.toString().concat(` %`)}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/imageView10"
                         app:layout_constraintStart_toStartOf="@+id/imageView10"
@@ -258,7 +258,7 @@
                         style="@style/weather_info_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{mHomeViewModel.weatherResponseLive.current.pressure.toString().concat(` hPa`)}"
+                        android:text="@{mViewModel.weatherResponseLive.current.pressure.toString().concat(` hPa`)}"
                         app:layout_constraintBaseline_toBaselineOf="@+id/textView11"
                         app:layout_constraintEnd_toEndOf="@+id/imageView11"
                         app:layout_constraintStart_toStartOf="@+id/imageView11" />
@@ -274,7 +274,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/todayRecyclerView"
-                hourlyDataset="@{mHomeViewModel.hourlyResponseLive}"
+                hourlyDataset="@{mViewModel.hourlyResponseLive}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -303,7 +303,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/daily_recycler"
-                dailyDataset="@{mHomeViewModel.dailyResponseLive}"
+                dailyDataset="@{mViewModel.dailyResponseLive}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_8"

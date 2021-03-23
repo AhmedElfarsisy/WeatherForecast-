@@ -14,7 +14,6 @@ class TodayAdapter : ListAdapter<HourlyItem, TodayAdapter.TodayHolder>(DiffCallB
     class TodayHolder(private val binding: HourlyItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HourlyItem?) {
-            Timber.i("$item")
             binding.mHourlyModel = item
             binding.executePendingBindings()
         }

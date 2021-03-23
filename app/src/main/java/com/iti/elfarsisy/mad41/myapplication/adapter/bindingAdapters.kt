@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.iti.elfarsisy.mad41.myapplication.data.model.DailyItem
 import com.iti.elfarsisy.mad41.myapplication.data.model.HourlyItem
+import com.iti.elfarsisy.mad41.myapplication.data.model.SavedPlaces
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
 import com.iti.elfarsisy.mad41.myapplication.data.source.remote.NetworkState
 import com.iti.elfarsisy.mad41.myapplication.helper.*
@@ -72,11 +73,12 @@ fun bindWindSpeed(textView: TextView, windSpeed: Double?) {
     val readWindSpeed = userSetting.read(WIND_SPEED_MEASUREMENT_KEY, WIND_SPEED_METER_SEC_VALUES)
 
     windSpeed?.let {
+        //temp CELSIUS
         if (readTemp == TEMP_CELSIUS_VALUES) {
             if (readWindSpeed == WIND_SPEED_METER_SEC_VALUES) {
                 textView.text = "${windSpeed}\nm/sec"
             } else {
-                textView.text = "${windSpeed?.times(0.4)}\nmile/hr"
+                textView.text = "${String.format("%.3f", it.times(0.4))}\nmile/hr"
 
             }
         } else if (readTemp == TEMP_FAHRENHEIT_VALUES || readTemp == TEMP_KELVIN_VALUES) {
@@ -156,3 +158,23 @@ fun setupDailyRecycler(recyclerView: RecyclerView, dataList: List<DailyItem>?) {
     recyclerView.adapter = adapter
     adapter.submitList(dataList)
 }
+
+
+@BindingAdapter("favoriteDataset")
+fun setupFavoriteRecycler(recyclerView: RecyclerView, dataList: List<SavedPlaces>?) {
+    val adapter = recyclerView.adapter as FavoritePlacesAdapter
+    adapter.submitList(dataList)
+
+}
+
+@BindingAdapter(value = ["latNum", "lonNum"], requireAll = true)
+fun bindLocationInfo(textView: TextView, lat: Double, lon: Double) {
+    val locationDescription = getLocationDescription(lat, lat)
+    if (locationDescription?.subAdminArea.isNullOrEmpty()) {
+        textView.text = "GeoCoder can not get this place info "
+    } else {
+        textView.text = locationDescription?.subAdminArea
+    }
+
+}
+

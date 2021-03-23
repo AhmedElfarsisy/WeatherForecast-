@@ -1,7 +1,5 @@
-package com.iti.elfarsisy.mad41.myapplication.ui.home
+package com.iti.elfarsisy.mad41.myapplication.ui.favoritedetails
 
-import android.location.Address
-import android.location.Geocoder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,16 +11,17 @@ import com.iti.elfarsisy.mad41.myapplication.data.repo.IWeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
 import com.iti.elfarsisy.mad41.myapplication.data.source.remote.NetworkState
 import com.iti.elfarsisy.mad41.myapplication.helper.*
-import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
-import kotlinx.coroutines.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.io.IOException
 
-class HomeViewModel(
+class FavoriteDetailsViewModel(
     private val weatherRepo: IWeatherRepo,
+    private val lat: Float,
+    private val lon: Float,
     private val userSettingRepo: UserSettingRepo
-) : ViewModel() {
-
+) :
+    ViewModel() {
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState> = _networkState
     private val _weatherResponseLive = MutableLiveData<WeatherData>()
@@ -43,6 +42,8 @@ class HomeViewModel(
     init {
         updateNetworkState(NetworkState.LOADING)
         readUserSettings()
+        fetchWeatherData(lat.toDouble(), lon.toDouble())
+        setLatAndLong(lat.toDouble(), lon.toDouble())
     }
 
     private fun readUserSettings() {
@@ -89,13 +90,10 @@ class HomeViewModel(
 
     fun setLatAndLong(latitude: Double, longitude: Double) {
         val locationDescription = getLocationDescription(latitude, longitude)
-        fetchWeatherData(latitude, longitude)
         Timber.i("check lat lon  $latitude ,$longitude")
         _cityLive.postValue(locationDescription?.subAdminArea)
         Timber.i("Get Location Description ${cityLive.value}")
 
     }
 
-
 }
-

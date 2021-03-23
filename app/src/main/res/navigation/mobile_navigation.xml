@@ -18,28 +18,51 @@
         <action
             android:id="@+id/action_nav_settings_fragment_to_mapFragment2"
             app:destination="@id/mapFragment2" />
+        <action
+            android:id="@+id/action_nav_settings_fragment_to_mapFragment22"
+            app:destination="@id/mapFragment2"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/nav_weather_alerts_fragment"
         android:name="com.iti.elfarsisy.mad41.myapplication.ui.alerts.WeatherAlertsFragment"
         android:label="Alerts"
-        tools:layout="@layout/weather_alerts_fragment" >
-        <action
-            android:id="@+id/action_nav_weather_alerts_fragment_self"
-            app:destination="@id/nav_weather_alerts_fragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out" />
-    </fragment>
+        tools:layout="@layout/weather_alerts_fragment" />
     <fragment
         android:id="@+id/nav_favorite_fragment"
         android:name="com.iti.elfarsisy.mad41.myapplication.ui.favorite.FavoriteFragment"
         android:label="Favorites"
-        tools:layout="@layout/favorite_fragment" />
+        tools:layout="@layout/favorite_fragment" >
+        <action
+            android:id="@+id/action_nav_favorite_fragment_to_mapFragment2"
+            app:destination="@id/mapFragment2" />
+        <action
+            android:id="@+id/action_nav_favorite_fragment_to_favoriteDetailsFragment"
+            app:destination="@id/favoriteDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mapFragment2"
         android:name="com.iti.elfarsisy.mad41.myapplication.ui.map.MapFragment"
         android:label="Map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <argument
+            android:name="screen_id"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteDetailsFragment"
+        android:name="com.iti.elfarsisy.mad41.myapplication.ui.favoritedetails.FavoriteDetailsFragment"
+        android:label="Favorite Details" >
+        <argument
+            android:name="lat"
+            app:argType="float"
+            android:defaultValue="0" />
+        <argument
+            android:name="lon"
+            app:argType="float"
+            android:defaultValue="0" />
+    </fragment>
 
 
 </navigation>

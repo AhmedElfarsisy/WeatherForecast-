@@ -1,5 +1,6 @@
 package com.iti.elfarsisy.mad41.myapplication.ui.settings
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
@@ -7,7 +8,9 @@ import com.iti.elfarsisy.mad41.myapplication.helper.*
 
 
 class SettingsViewModel(private val userSettingRepo: UserSettingRepo) : ViewModel() {
-    val navigatorToMap = MutableLiveData<Boolean>()
+    private val _navigatorToMap = MutableLiveData<Boolean>()
+    val navigatorToMap: LiveData<Boolean> = _navigatorToMap
+
 
     val locationMethod = MutableLiveData<String>()
     val language = MutableLiveData<String>()
@@ -15,7 +18,6 @@ class SettingsViewModel(private val userSettingRepo: UserSettingRepo) : ViewMode
     val windMeasure = MutableLiveData<String>()
 
     init {
-        navigatorToMap.value = false
         readSettingsFromSharedPrefrances()
     }
 
@@ -68,11 +70,11 @@ class SettingsViewModel(private val userSettingRepo: UserSettingRepo) : ViewMode
     }
 
     fun navigateToMap() {
-        navigatorToMap.value = true
+        _navigatorToMap.value = true
     }
 
-    fun commpletNavigation() {
-        navigatorToMap.value = false
+    fun completNavigation() {
+        _navigatorToMap.value = false
     }
 
 }

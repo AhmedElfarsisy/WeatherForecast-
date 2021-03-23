@@ -24,4 +24,6 @@ class BaseActivity : AppCompatActivity() {
         configuration.setLocale(dLocale)
         wrapper.applyOverrideConfiguration(configuration)
     }
+
+
 }

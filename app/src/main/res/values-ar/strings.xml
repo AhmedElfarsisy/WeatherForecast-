@@ -21,4 +21,7 @@
     <string name="fahrenheit">فهرنهايت</string>
     <string name="keliven">كلفن.</string>
     <string name="celsius">"سيلسيوس "</string>
+    <string name="add_location_btn">Add Location</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
 </resources>
