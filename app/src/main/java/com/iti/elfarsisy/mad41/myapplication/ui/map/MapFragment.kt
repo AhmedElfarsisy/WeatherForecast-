@@ -43,7 +43,7 @@ class MapFragment : Fragment() {
     //fragment Extension
     private val viewModel by viewModels<MapViewModel> {
         MapViewModelFactory(
-            WeatherRepo(),
+            WeatherRepo(MyApplication.getContext()),
             SavedPlacesRepo(MyApplication.getContext()),
             UserSettingRepo(MyApplication.getContext()),
             MapFragmentArgs.fromBundle(requireArguments()).screenId

@@ -1,9 +1,6 @@
 package com.iti.elfarsisy.mad41.myapplication.ui.favorite
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.iti.elfarsisy.mad41.myapplication.data.model.SavedPlaces
 import com.iti.elfarsisy.mad41.myapplication.data.repo.ISavedPlacesRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.IWeatherRepo
@@ -15,8 +12,8 @@ class FavoriteViewModel(
     val weatherRepo: IWeatherRepo,
     private val savedPlacesRepo: ISavedPlacesRepo,
     userSettingRepo: UserSettingRepo
-) :
-    ViewModel() {
+) : ViewModel() {
+    var savedPlacesLive = MediatorLiveData<MutableList<SavedPlaces>>()
 
     init {
         Timber.i("Hello LocationBody")
@@ -24,17 +21,9 @@ class FavoriteViewModel(
     }
 
     private fun fetchPlacesFromLocal() {
-        viewModelScope.launch {
-            var async: Deferred<List<SavedPlaces>>
-            withContext(Dispatchers.IO) {
-                async = async { savedPlacesRepo.getFavoritePlaces() }
-            }
-            if (!async.await().isNullOrEmpty()) {
-                _savedPlacesLive.postValue(async.await())
-                Timber.i("Hello Location ${async.await().get(0).lat}")
-            } else {
-                Timber.i("Hello Database is Empty")
-
+        savedPlacesRepo.getFavoritePlaces()?.let { savedPlaces ->
+            savedPlacesLive.addSource(savedPlaces) {
+                savedPlacesLive.postValue(it)
             }
         }
     }
@@ -56,7 +45,6 @@ class FavoriteViewModel(
         viewModelScope.launch {
             var place: Deferred<SavedPlaces>
             withContext(Dispatchers.IO) {
-
                 place = async { savedPlacesRepo.getPlaceById(placeId) }
             }
             val lat = place.await().lat
@@ -69,13 +57,17 @@ class FavoriteViewModel(
     fun delete(placeId: Int) {
         viewModelScope.launch {
             Timber.i("VM delete")
-            savedPlacesRepo.deleteFavoritePlace(placeId)
-            fetchPlacesFromLocal()
+            var place: Deferred<SavedPlaces>
+            withContext(Dispatchers.IO) {
+                place = async { savedPlacesRepo.getPlaceById(placeId) }
+            }
+            place.await().lat?.let {
+                Timber.i("@@@@@@ DeleteXXXXX weather Data From ModelView")
+                weatherRepo.deleteWeatherDataById(it)
+                savedPlacesRepo.deleteFavoritePlace(placeId)
+            }
+//            fetchPlacesFromLocal()
         }
-    }
-
-    fun refershUI() {
-        fetchPlacesFromLocal()
     }
 
     //PROPERTIES
@@ -86,8 +78,4 @@ class FavoriteViewModel(
     private val _navigatorToMap = MutableLiveData<Boolean>()
     val navigatorToMap: LiveData<Boolean> = _navigatorToMap
 
-    private val _savedPlacesLive = MutableLiveData<
-            List<SavedPlaces>?>()
-    val savedPlacesLive: LiveData<
-            List<SavedPlaces>?> = _savedPlacesLive
 }

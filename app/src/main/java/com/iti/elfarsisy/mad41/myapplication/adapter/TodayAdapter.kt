@@ -17,19 +17,15 @@ class TodayAdapter : ListAdapter<HourlyItem, TodayAdapter.TodayHolder>(DiffCallB
             binding.mHourlyModel = item
             binding.executePendingBindings()
         }
-
     }
-
     companion object DiffCallBack : DiffUtil.ItemCallback<HourlyItem>() {
         override fun areItemsTheSame(oldItem: HourlyItem, newItem: HourlyItem) = oldItem == newItem
         override fun areContentsTheSame(oldItem: HourlyItem, newItem: HourlyItem) =
             oldItem.dt == newItem.dt
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodayHolder {
         return TodayHolder(HourlyItemBinding.inflate(LayoutInflater.from(parent.context)))
     }
-
     override fun onBindViewHolder(holder: TodayHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)

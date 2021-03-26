@@ -9,19 +9,20 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "weather_data")
 data class WeatherData(
-
+    @field:SerializedName("lat")
+    @PrimaryKey
+    val lat: Double,
     @field:SerializedName("current")
     val current: Current? = null,
 
     @field:SerializedName("timezone")
-   @PrimaryKey
     val timezone: String,
 
     @field:SerializedName("timezone_offset")
     val timezoneOffset: Int,
 
     @field:SerializedName("daily")
-    val daily: List<DailyItem>,
+    val daily: MutableList<DailyItem>,
 
     @field:SerializedName("lon")
     val lon: Double? = null,
@@ -31,7 +32,4 @@ data class WeatherData(
 
     @field:SerializedName("minutely")
     val minutely: List<MinutelyItem>,
-
-    @field:SerializedName("lat")
-    val lat: Double? = null
 ) : Parcelable

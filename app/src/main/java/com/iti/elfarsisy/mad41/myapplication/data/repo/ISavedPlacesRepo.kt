@@ -2,18 +2,21 @@ package com.iti.elfarsisy.mad41.myapplication.data.repo
 
 import androidx.lifecycle.LiveData
 import com.iti.elfarsisy.mad41.myapplication.data.model.SavedPlaces
+import com.iti.elfarsisy.mad41.myapplication.data.model.WeatherAlertsLocal
 
 interface ISavedPlacesRepo {
-    suspend fun getFavoritePlaces(): List<SavedPlaces>
+    fun getFavoritePlaces(): LiveData<MutableList<SavedPlaces>>
 
     suspend fun insertFavoritePlace(place: SavedPlaces)
 
     suspend fun deleteFavoritePlace(id: Int)
 
-    suspend fun getAllAlertPlaces(): LiveData<List<SavedPlaces>>
+    fun getAllAlerts(): LiveData<MutableList<WeatherAlertsLocal>>
 
-    suspend fun insertAlertPlace(place: SavedPlaces)
+    suspend fun insertAlert(alert: WeatherAlertsLocal)
 
-    suspend fun deleteAlertPlace(id: Int)
+    suspend fun deleteAlert(id: Long)
+
     fun getPlaceById(id: Int): SavedPlaces
+
 }

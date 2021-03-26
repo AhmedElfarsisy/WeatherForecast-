@@ -3,18 +3,19 @@ package com.iti.elfarsisy.mad41.myapplication.data.source.local
 import android.content.Context
 import androidx.room.*
 import com.iti.elfarsisy.mad41.myapplication.data.model.SavedPlaces
+import com.iti.elfarsisy.mad41.myapplication.data.model.WeatherAlertsLocal
 import com.iti.elfarsisy.mad41.myapplication.data.model.WeatherData
-import com.iti.elfarsisy.mad41.myapplication.data.source.local.dao.SavedPlacesDao
+import com.iti.elfarsisy.mad41.myapplication.data.source.local.dao.WeatherAlertDao
 import com.iti.elfarsisy.mad41.myapplication.data.source.local.dao.FavoritePlacesDao
 import com.iti.elfarsisy.mad41.myapplication.data.source.local.dao.WeatherDao
 
 //@TypeConverters(DailyConverter::class, MinutelyConverter::class, HourlyConverter::class)
 //, WeatherData::class
 @TypeConverters(DTOConverter::class)
-@Database(entities = [WeatherData::class,SavedPlaces::class], version = 1, exportSchema = false)
+@Database(entities = [WeatherData::class,SavedPlaces::class,WeatherAlertsLocal::class], version = 1, exportSchema = false)
 abstract class WeatherDatabase : RoomDatabase() {
 
-    abstract fun alertPlacesDao(): SavedPlacesDao
+    abstract fun alertDao(): WeatherAlertDao
     abstract fun favoritePlacesDao(): FavoritePlacesDao
     abstract fun weatherDao(): WeatherDao
 

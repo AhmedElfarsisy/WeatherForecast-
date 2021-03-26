@@ -9,6 +9,9 @@
             name="mFavModel"
             type="com.iti.elfarsisy.mad41.myapplication.ui.favorite.FavoriteViewModel" />
 
+        <variable
+            name="mAlertModel"
+            type="com.iti.elfarsisy.mad41.myapplication.ui.alerts.WeatherAlertsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

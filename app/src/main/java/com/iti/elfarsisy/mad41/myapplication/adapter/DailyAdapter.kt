@@ -13,7 +13,6 @@ class DailyAdapter : ListAdapter<DailyItem, DailyAdapter.DailyHolder>(DiffCallBa
     class DailyHolder(private val binding: DailyItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DailyItem?) {
-            Timber.i("$item")
             binding.mDailyModel = item
             binding.executePendingBindings()
         }

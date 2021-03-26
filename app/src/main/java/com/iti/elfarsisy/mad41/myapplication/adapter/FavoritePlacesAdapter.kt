@@ -3,7 +3,6 @@ package com.iti.elfarsisy.mad41.myapplication.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,12 +17,8 @@ class FavoritePlacesAdapter() :
 
     class FavoritePlacesHolder(private val binding: FavoriteItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        var textView: TextView = binding.placeTextView
-        var starImageView:ImageView = binding.StarImageView
-        lateinit var deletImageView:ImageView
-        init {
-            deletImageView=binding.deleteImageView
-        }
+        var deleteImageView: ImageView = binding.deleteImageView
+
         fun bind(item: SavedPlaces?) {
             Timber.i("$item")
             binding.mSavedPlaces = item
@@ -45,7 +40,7 @@ class FavoritePlacesAdapter() :
         holder.itemView.setOnClickListener {
             onFavoriteClickListner.onPlaceClick(item.pId!!)
         }
-        holder.deletImageView .setOnClickListener {
+        holder.deleteImageView.setOnClickListener {
             onFavoriteClickListner.onDeletePlace(item.pId!!)
         }
         holder.bind(item)

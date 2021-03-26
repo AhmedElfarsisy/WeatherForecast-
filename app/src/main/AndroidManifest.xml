@@ -3,16 +3,12 @@
     package="com.iti.elfarsisy.mad41.myapplication">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
-    <!--    &lt;!&ndash;Service foreground permissions&ndash;&gt;-->
+    <!--Service foreground permissions -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!--Location permissions-->
+    <!--Location permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -24,9 +20,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherForcast">
+        <service
+            android:name=".services.WeatherAlertService"
+            android:exported="false"></service>
+
+        <receiver
+            android:name=".broadcast.WeatherAlertBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.intent.action.BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

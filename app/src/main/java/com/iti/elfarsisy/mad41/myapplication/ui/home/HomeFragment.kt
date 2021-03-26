@@ -32,7 +32,7 @@ class HomeFragment : Fragment() {
 
     //fragment Extension
     private val homeViewModel by viewModels<HomeViewModel> {
-        HomeViewModelFactory(WeatherRepo(), UserSettingRepo(MyApplication.getContext()))
+        HomeViewModelFactory(WeatherRepo(MyApplication.getContext()), UserSettingRepo(MyApplication.getContext()))
     }
     private lateinit var binding: FragmentHomeBinding
     override fun onCreateView(
@@ -113,7 +113,7 @@ class HomeFragment : Fragment() {
     private fun requestLocationData() {
         val locationRequest = LocationRequest()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = 5000
+        locationRequest.interval = 15000
         locationRequest.numUpdates = 1
         locationProviderClient.requestLocationUpdates(
             locationRequest,

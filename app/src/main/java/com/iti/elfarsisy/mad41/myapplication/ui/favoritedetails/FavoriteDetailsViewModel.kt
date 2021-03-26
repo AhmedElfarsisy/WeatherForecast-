@@ -1,9 +1,6 @@
 package com.iti.elfarsisy.mad41.myapplication.ui.favoritedetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.iti.elfarsisy.mad41.myapplication.data.model.DailyItem
 import com.iti.elfarsisy.mad41.myapplication.data.model.HourlyItem
 import com.iti.elfarsisy.mad41.myapplication.data.model.WeatherData
@@ -11,8 +8,7 @@ import com.iti.elfarsisy.mad41.myapplication.data.repo.IWeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
 import com.iti.elfarsisy.mad41.myapplication.data.source.remote.NetworkState
 import com.iti.elfarsisy.mad41.myapplication.helper.*
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import timber.log.Timber
 
 class FavoriteDetailsViewModel(
@@ -24,12 +20,12 @@ class FavoriteDetailsViewModel(
     ViewModel() {
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState> = _networkState
-    private val _weatherResponseLive = MutableLiveData<WeatherData>()
-    val weatherResponseLive: LiveData<WeatherData> = _weatherResponseLive
-    private val _dailyResponseLive = MutableLiveData<List<DailyItem?>?>()
-    val dailyResponseLive: LiveData<List<DailyItem?>?> = _dailyResponseLive
-    private val _hourlyResponseLive = MutableLiveData<List<HourlyItem?>?>()
-    val hourlyResponseLive: LiveData<List<HourlyItem?>?> = _hourlyResponseLive
+    private val _weatherResponseLive = MediatorLiveData<WeatherData>()
+    val weatherResponseLive: MediatorLiveData<WeatherData> = _weatherResponseLive
+    private val _dailyResponseLive = MediatorLiveData<List<DailyItem?>?>()
+    val dailyResponseLive: MediatorLiveData<List<DailyItem?>?> = _dailyResponseLive
+    private val _hourlyResponseLive = MediatorLiveData<List<HourlyItem?>?>()
+    val hourlyResponseLive: MediatorLiveData<List<HourlyItem?>?> = _hourlyResponseLive
     private val _cityLive = MutableLiveData<String>()
     val cityLive: LiveData<String> = _cityLive
     private val _locationToolLive = MutableLiveData<String>()
@@ -74,10 +70,16 @@ class FavoriteDetailsViewModel(
                 _weatherResponseLive.postValue(weatherResponse.await().body())
                 _dailyResponseLive.postValue(weatherResponse.await().body()?.daily)
                 _hourlyResponseLive.postValue(weatherResponse.await().body()?.hourly)
+                withContext(Dispatchers.IO) {
+                    weatherResponse.await().body()?.let {
+                        insertWeatherDataToLocal(it)
+                    }
+                }
                 updateNetworkState(NetworkState.DONE)
                 Timber.i("Successful API $lat, $lon")
             } else {
                 updateNetworkState(NetworkState.ERROR)
+                fetchWeatherDataFromLocal(lat, lon)
                 Timber.i("${weatherResponse.await().message()}")
             }
         }
@@ -88,11 +90,26 @@ class FavoriteDetailsViewModel(
         _networkState.postValue(state)
     }
 
-    fun setLatAndLong(latitude: Double, longitude: Double) {
+    private fun setLatAndLong(latitude: Double, longitude: Double) {
         val locationDescription = getLocationDescription(latitude, longitude)
         Timber.i("check lat lon  $latitude ,$longitude")
         _cityLive.postValue(locationDescription?.subAdminArea)
         Timber.i("Get Location Description ${cityLive.value}")
+
+    }
+
+    private fun insertWeatherDataToLocal(weatherData: WeatherData) {
+        CoroutineScope(Dispatchers.IO).launch {
+            weatherRepo.insertWeatherData(weatherData)
+        }
+    }
+
+    private fun fetchWeatherDataFromLocal(lat: Double, lon: Double) {
+      weatherRepo.getWeatherDataById(lat)?.let {liveWeather->
+            weatherResponseLive.addSource(liveWeather) {
+                weatherResponseLive.postValue(it)
+            }
+        }
 
     }
 

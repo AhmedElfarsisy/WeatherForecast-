@@ -3,12 +3,13 @@ package com.iti.elfarsisy.mad41.myapplication.data.repo
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.iti.elfarsisy.mad41.myapplication.data.model.SavedPlaces
+import com.iti.elfarsisy.mad41.myapplication.data.model.WeatherAlertsLocal
 import com.iti.elfarsisy.mad41.myapplication.data.source.local.WeatherDatabase
 
 
 class SavedPlacesRepo(val application: Context) : ISavedPlacesRepo {
     private val databaseRoom: WeatherDatabase = WeatherDatabase.getInstance(application)
-    override suspend fun getFavoritePlaces(): List<SavedPlaces> {
+    override fun getFavoritePlaces(): LiveData<MutableList<SavedPlaces>> {
         return databaseRoom.favoritePlacesDao().getAllFavoritesPlaces()
     }
 
@@ -20,20 +21,20 @@ class SavedPlacesRepo(val application: Context) : ISavedPlacesRepo {
         databaseRoom.favoritePlacesDao().delete(id)
     }
 
-    override suspend fun getAllAlertPlaces(): LiveData<List<SavedPlaces>> {
-        return databaseRoom.alertPlacesDao().getAllAlertPlaces()
+    override fun getAllAlerts(): LiveData<MutableList<WeatherAlertsLocal>> {
+        return databaseRoom.alertDao().getAllAlerts()
     }
 
-    override suspend fun insertAlertPlace(place: SavedPlaces) {
-        databaseRoom.alertPlacesDao().insert(place)
+    override suspend fun insertAlert(alert: WeatherAlertsLocal) {
+        databaseRoom.alertDao().insert(alert)
     }
 
-    override suspend fun deleteAlertPlace(id: Int) {
-        databaseRoom.alertPlacesDao().delete(id)
+    override suspend fun deleteAlert(id: Long) {
+        databaseRoom.alertDao().delete(id)
     }
 
-    override fun getPlaceById(id: Int):SavedPlaces {
-       return databaseRoom.favoritePlacesDao().getPlaceById(id)
+    override fun getPlaceById(id: Int): SavedPlaces {
+        return databaseRoom.favoritePlacesDao().getPlaceById(id)
     }
 
 }

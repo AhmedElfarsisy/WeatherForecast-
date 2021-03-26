@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.iti.elfarsisy.mad41.myapplication.data.model.DailyItem
 import com.iti.elfarsisy.mad41.myapplication.data.model.HourlyItem
 import com.iti.elfarsisy.mad41.myapplication.data.model.SavedPlaces
+import com.iti.elfarsisy.mad41.myapplication.data.model.WeatherAlertsLocal
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
 import com.iti.elfarsisy.mad41.myapplication.data.source.remote.NetworkState
 import com.iti.elfarsisy.mad41.myapplication.helper.*
@@ -85,7 +86,7 @@ fun bindWindSpeed(textView: TextView, windSpeed: Double?) {
             if (readWindSpeed == WIND_SPEED_MILE_HOURE_VALUES) {
                 textView.text = "${windSpeed}\nmile/h"
             } else {
-                textView.text = "${windSpeed?.times(2.2)}\nm/sec"
+                textView.text = "${String.format("%.3f", it.times(2.2))}\nm/sec"
             }
         }
     }
@@ -153,7 +154,9 @@ fun setTodayRecycler(recyclerView: RecyclerView, dataList: List<HourlyItem>?) {
 }
 
 @BindingAdapter("dailyDataset")
-fun setupDailyRecycler(recyclerView: RecyclerView, dataList: List<DailyItem>?) {
+fun setupDailyRecycler(recyclerView: RecyclerView, dataList: MutableList<DailyItem>?) {
+    dataList?.removeFirst()
+    dataList?.removeLast()
     val adapter = DailyAdapter()
     recyclerView.adapter = adapter
     adapter.submitList(dataList)
@@ -171,10 +174,29 @@ fun setupFavoriteRecycler(recyclerView: RecyclerView, dataList: List<SavedPlaces
 fun bindLocationInfo(textView: TextView, lat: Double, lon: Double) {
     val locationDescription = getLocationDescription(lat, lat)
     if (locationDescription?.subAdminArea.isNullOrEmpty()) {
-        textView.text = "GeoCoder can not get this place info "
+        textView.text = "Undefinde area for this position $lat,$lon "
     } else {
         textView.text = locationDescription?.subAdminArea
     }
 
 }
 
+
+@BindingAdapter("alertsDataset")
+fun setupAlertsRecycler(recyclerView: RecyclerView, dataList: List<WeatherAlertsLocal>?) {
+    val adapter = recyclerView.adapter as WeatherAlertsAdapter
+    adapter.submitList(dataList)
+
+}
+
+@BindingAdapter("parseAlertsTime")
+fun parseTimeStampToDate(textView: TextView, timeStamp: Long) {
+    var date = ""
+    timeStamp?.let {
+        val simpleDateFormat = SimpleDateFormat("EEEE dd-MM-yyy - hh:mm a")
+        val netDate = Date(timeStamp)
+        date = simpleDateFormat.format(netDate)
+        textView.text = date
+    }
+
+}

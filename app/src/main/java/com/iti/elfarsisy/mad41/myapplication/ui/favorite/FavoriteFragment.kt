@@ -25,7 +25,7 @@ class FavoriteFragment : Fragment(), OnFavoriteClickListner {
     //fragment Extension
     private val viewModel by viewModels<FavoriteViewModel> {
         FavoriteViewModelFactory(
-            WeatherRepo(),
+            WeatherRepo(MyApplication.getContext()),
             SavedPlacesRepo(MyApplication.getContext()),
             UserSettingRepo(MyApplication.getContext())
         )
@@ -34,9 +34,7 @@ class FavoriteFragment : Fragment(), OnFavoriteClickListner {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-    companion object {
-        fun newInstance() = FavoriteFragment()
-    }
+
 
     private lateinit var binding: FavoriteFragmentBinding
     override fun onCreateView(
@@ -108,12 +106,12 @@ class FavoriteFragment : Fragment(), OnFavoriteClickListner {
 
     override fun onStart() {
         super.onStart()
-        viewModel.refershUI()
+//        viewModel.refreshUI()
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.refershUI()
+//        viewModel.refreshUI()
 
     }
 

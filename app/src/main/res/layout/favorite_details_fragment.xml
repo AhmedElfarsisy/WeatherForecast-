@@ -16,6 +16,7 @@
         android:fillViewport="true">
 
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/motion_main_layout"
             android:layout_width="match_parent"
@@ -132,18 +133,69 @@
             </androidx.cardview.widget.CardView>
 
 
+            <TextView
+                android:id="@+id/textView15"
+                style="@style/home_header_tv_style"
+                android:layout_marginTop="16dp"
+                android:text="@string/today"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/todayRecyclerView"
+                hourlyDataset="@{mViewModel.hourlyResponseLive}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/background"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView15"
+                tools:itemCount="4"
+                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/hourly_item"
+                tools:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/textView16"
+                style="@style/home_header_tv_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/next_week"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/todayRecyclerView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/daily_recycler"
+                dailyDataset="@{mViewModel.dailyResponseLive}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_8"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView16"
+                tools:listitem="@layout/daily_item" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/weather_monitor_constraintL_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_24"
-                android:layout_marginTop="@dimen/margin_16"
                 android:layout_marginEnd="@dimen/margin_24"
+                android:layout_marginBottom="16dp"
                 app:cardCornerRadius="@dimen/raduis_32"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView2">
+                app:layout_constraintTop_toBottomOf="@+id/daily_recycler">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -265,55 +317,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/textView15"
-                style="@style/home_header_tv_style"
-                android:text="@string/today"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/weather_monitor_constraintL_layout" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/todayRecyclerView"
-                hourlyDataset="@{mViewModel.hourlyResponseLive}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@color/background"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView15"
-                tools:itemCount="4"
-                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/hourly_item"
-                tools:orientation="horizontal" />
-
-            <TextView
-                android:id="@+id/textView16"
-                style="@style/home_header_tv_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/next_week"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/todayRecyclerView" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/daily_recycler"
-                dailyDataset="@{mViewModel.dailyResponseLive}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_8"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView16"
-                tools:listitem="@layout/daily_item" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

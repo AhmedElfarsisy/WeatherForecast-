@@ -16,14 +16,16 @@
         android:layout_marginEnd="@dimen/margin_24"
         android:background="@drawable/rounded_toolbar"
         android:elevation="@dimen/raduis_8"
+        android:theme="@style/MyThemeOverlay_Toolbar"
         app:titleTextColor="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="?attr/actionBarSize">
-        <include layout="@layout/content_main"/>
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical">
+
+        <include layout="@layout/content_main" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

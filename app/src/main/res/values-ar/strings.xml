@@ -24,4 +24,6 @@
     <string name="add_location_btn">Add Location</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
 </resources>

@@ -8,8 +8,9 @@ import com.iti.elfarsisy.mad41.myapplication.data.model.SavedPlaces
 import com.iti.elfarsisy.mad41.myapplication.data.repo.ISavedPlacesRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.IWeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
+import com.iti.elfarsisy.mad41.myapplication.helper.LAT_KEY
+import com.iti.elfarsisy.mad41.myapplication.helper.LON_KEY
 import com.iti.elfarsisy.mad41.myapplication.helper.getLocationDescription
-import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 import kotlinx.coroutines.launch
 
 class MapViewModel(
@@ -38,16 +39,20 @@ class MapViewModel(
         if (locationLat.value == null) {
             _locationInfo.value = "please,pick location"
         } else {
+            val lat = locationLat.value
+            val lon = locationLon.value
             when (screenId) {
                 0 -> {
                     //save in SharedPreferences
+                    userSettingRepo.write(LAT_KEY, "$lat")
+                    userSettingRepo.write(LON_KEY, "$lon")
                 }
                 1 -> {//save Favorites in DB
                     viewModelScope.launch {
-                        savedPlacesRepo.insertAlertPlace(
+                        savedPlacesRepo.insertFavoritePlace(
                             SavedPlaces(
-                                lat = locationLat.value,
-                                lon = locationLon.value,
+                                lat = lat,
+                                lon = lon,
                                 screenId = 1
                             )
                         )
@@ -57,7 +62,7 @@ class MapViewModel(
 
                 2 -> {
                     viewModelScope.launch {
-                        savedPlacesRepo.insertAlertPlace(
+                        savedPlacesRepo.insertFavoritePlace(
                             SavedPlaces(
                                 lat = locationLat.value,
                                 lon = locationLon.value,

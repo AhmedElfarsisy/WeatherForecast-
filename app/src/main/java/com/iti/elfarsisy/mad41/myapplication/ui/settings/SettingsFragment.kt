@@ -1,6 +1,5 @@
 package com.iti.elfarsisy.mad41.myapplication.ui.settings
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,10 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.iti.elfarsisy.mad41.myapplication.R
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
-import com.iti.elfarsisy.mad41.myapplication.data.repo.WeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.databinding.SettingsFragmentBinding
-import com.iti.elfarsisy.mad41.myapplication.ui.home.HomeViewModel
-import com.iti.elfarsisy.mad41.myapplication.ui.home.HomeViewModelFactory
 import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 
 class SettingsFragment : Fragment() {

@@ -16,7 +16,7 @@ interface FavoritePlacesDao {
     suspend fun delete(placeId: Int)
 
     @Query("SELECT * FROM places WHERE screenId=1 ORDER BY pId DESC")
-    fun getAllFavoritesPlaces(): List<SavedPlaces>
+     fun getAllFavoritesPlaces():LiveData<MutableList<SavedPlaces>>
 
     @Query("SELECT * FROM places WHERE pId=:placeId")
     fun getPlaceById(placeId: Int): SavedPlaces

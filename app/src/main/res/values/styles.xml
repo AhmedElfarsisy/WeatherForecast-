@@ -40,4 +40,12 @@
     </style>
 
 
+    <style name="MyThemeOverlay_Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <!-- This attributes is used by title -->
+        <item name="android:textColorPrimary">@color/white</item>
+
+        <!-- This attributes is used by navigation icon and overflow icon -->
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
 </resources>

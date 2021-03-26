@@ -18,7 +18,7 @@ class FavoriteDetailsFragment : Fragment() {
     //fragment Extension
     private val viewModel by viewModels<FavoriteDetailsViewModel> {
         FavoriteDetailsViewModelFactory(
-            WeatherRepo(),
+            WeatherRepo(MyApplication.getContext()),
             FavoriteDetailsFragmentArgs.fromBundle(requireArguments()).lat,
             FavoriteDetailsFragmentArgs.fromBundle(requireArguments()).lon,
             UserSettingRepo(MyApplication.getContext())
