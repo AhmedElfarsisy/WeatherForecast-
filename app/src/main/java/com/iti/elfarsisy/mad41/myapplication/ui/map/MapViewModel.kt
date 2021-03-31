@@ -46,6 +46,7 @@ class MapViewModel(
                     //save in SharedPreferences
                     userSettingRepo.write(LAT_KEY, "$lat")
                     userSettingRepo.write(LON_KEY, "$lon")
+                    navigateBack()
                 }
                 1 -> {//save Favorites in DB
                     viewModelScope.launch {

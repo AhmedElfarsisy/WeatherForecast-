@@ -29,7 +29,7 @@ class WeatherAlertsAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlertsHolder {
-        return AlertsHolder(AlertItemBinding.inflate(LayoutInflater.from(parent.context)))
+        return AlertsHolder(AlertItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
     override fun onBindViewHolder(holder: AlertsHolder, position: Int) {

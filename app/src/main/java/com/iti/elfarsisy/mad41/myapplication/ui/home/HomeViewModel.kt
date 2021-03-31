@@ -46,14 +46,16 @@ class HomeViewModel(
         decideUnit(userSettingRepo.read(TEMP_MEASUREMENT_KEY, TEMP_CELSIUS_VALUES)!!)
         _locationToolLive.value = userSettingRepo.read(LOCATION_tool_KEY, GPS_LOCATION_VALUES)!!
         lang = userSettingRepo.read(APP_LOCAL_KEY, APP_LOCAL_EN_VALUES)!!
+        _locationToolLive.postValue(userSettingRepo.read(LOCATION_tool_KEY, GPS_LOCATION_VALUES))
+
     }
 
     private fun decideUnit(unit: String) {
-        when (unit) {
-            TEMP_CELSIUS_VALUES -> units = UNITS_METRIC
-            TEMP_KELVIN_VALUES -> units = UNITS_STANDERD
-            TEMP_FAHRENHEIT_VALUES -> units = UNITS_IMPERIAL
-            else -> units = UNITS_METRIC
+        units = when (unit) {
+            TEMP_CELSIUS_VALUES -> UNITS_METRIC
+            TEMP_KELVIN_VALUES -> UNITS_STANDERD
+            TEMP_FAHRENHEIT_VALUES -> UNITS_IMPERIAL
+            else -> UNITS_METRIC
         }
     }
 
@@ -61,23 +63,25 @@ class HomeViewModel(
         viewModelScope.launch {
             val weatherResponse =
                 async { weatherRepo.fetchWeatherData(lat, lon, lang = lang, units) }
-            getLocationDescription(lat, lon)
-            if (weatherResponse.await().isSuccessful) {
-                _weatherResponseLive.postValue(weatherResponse.await().body())
-                _dailyResponseLive.postValue(weatherResponse.await().body()?.daily)
-                _hourlyResponseLive.postValue(weatherResponse.await().body()?.hourly)
-                withContext(Dispatchers.IO) {
-                    weatherResponse.await().body()?.let {
-                        insertWeatherDataToLocal(it)
+            weatherResponse.await()?.let { response ->
+                if (response.isSuccessful) {
+                    _weatherResponseLive.postValue(response.body())
+                    _dailyResponseLive.postValue(response.body()?.daily)
+                    _hourlyResponseLive.postValue(response.body()?.hourly)
+                    withContext(Dispatchers.IO) {
+                        response.body()?.let {
+                            insertWeatherDataToLocal(it)
+                        }
                     }
+                    updateNetworkState(NetworkState.DONE)
+                    Timber.i("Successful API $lat, $lon")
+                } else {
+                    updateNetworkState(NetworkState.ERROR)
+                    fetchWeatherDataFromLocal(lat, lon)
+                    Timber.i("${weatherResponse.await().message()}")
                 }
-                updateNetworkState(NetworkState.DONE)
-                Timber.i("Successful API $lat, $lon")
-            } else {
-                updateNetworkState(NetworkState.ERROR)
-                fetchWeatherDataFromLocal(lat, lon)
-                Timber.i("${weatherResponse.await().message()}")
             }
+
         }
     }
 
@@ -105,6 +109,12 @@ class HomeViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             weatherRepo.insertWeatherData(weatherData)
         }
+    }
+
+    fun getLocation() {
+        val userLat = userSettingRepo.read(LAT_KEY, "" + 0.0)?.toDouble()
+        val userLon = userSettingRepo.read(LON_KEY, "" + 0.0)?.toDouble()
+        setLatAndLong(userLat!!, userLon!!)
     }
 }
 

@@ -20,7 +20,7 @@ class DailyAdapter : ListAdapter<DailyItem, DailyAdapter.DailyHolder>(DiffCallBa
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyHolder {
-        return DailyHolder(DailyItemBinding.inflate(LayoutInflater.from(parent.context)))
+        return DailyHolder(DailyItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
     override fun onBindViewHolder(holder: DailyHolder, position: Int) {

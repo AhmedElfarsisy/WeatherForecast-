@@ -32,7 +32,7 @@ class FavoritePlacesAdapter() :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritePlacesHolder {
-        return FavoritePlacesHolder(FavoriteItemBinding.inflate(LayoutInflater.from(parent.context)))
+        return FavoritePlacesHolder(FavoriteItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
     override fun onBindViewHolder(holder: FavoritePlacesHolder, position: Int) {

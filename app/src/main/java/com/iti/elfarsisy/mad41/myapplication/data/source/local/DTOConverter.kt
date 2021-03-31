@@ -3,10 +3,7 @@ package com.iti.elfarsisy.mad41.myapplication.data.source.local
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.iti.elfarsisy.mad41.myapplication.data.model.Current
-import com.iti.elfarsisy.mad41.myapplication.data.model.DailyItem
-import com.iti.elfarsisy.mad41.myapplication.data.model.HourlyItem
-import com.iti.elfarsisy.mad41.myapplication.data.model.MinutelyItem
+import com.iti.elfarsisy.mad41.myapplication.data.model.*
 
 
 class DTOConverter {
@@ -51,6 +48,18 @@ class DTOConverter {
 
         val listType = object : TypeToken<List<MinutelyItem?>>() {}.type
 
+        return Gson().fromJson(gson, listType)
+    }
+
+
+    @TypeConverter
+    fun fromAlertsObjToString(list: List<WeatherAlerts?>?): String? {
+        return Gson().toJson(list)
+    }
+
+    @TypeConverter
+    fun fromAlertsJsonToList(gson: String): List<WeatherAlerts?>? {
+        val listType = object : TypeToken<List<WeatherAlerts?>>() {}.type
         return Gson().fromJson(gson, listType)
     }
 

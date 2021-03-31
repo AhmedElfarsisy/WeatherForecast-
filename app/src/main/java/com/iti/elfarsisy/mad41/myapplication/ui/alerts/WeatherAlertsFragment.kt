@@ -2,13 +2,19 @@ package com.iti.elfarsisy.mad41.myapplication.ui.alerts
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.ComponentName
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -34,6 +40,25 @@ class WeatherAlertsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     private var pickedMonth: Int? = null
     private var pickedDay: Int? = null
     val calendar: Calendar = Calendar.getInstance()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        askAboutPermissions()
+    }
+
+    private fun askAboutPermissions() {
+        // Overlay permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            //when screen is black but not locked it will light-up
+            requireActivity().setShowWhenLocked(true)
+            requireActivity().setTurnScreenOn(true)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(requireActivity())) {
+                checkDrawOverAppsPermissionsDialog()
+            }
+        }
+        runBackgroundPermissions()
+    }
 
     //fragment Extension
     private val viewModel by viewModels<WeatherAlertsViewModel> {
@@ -92,7 +117,17 @@ class WeatherAlertsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             showDatePicker()
         }
         alertDialogLayoutBinding.addBtn.setOnClickListener {
-            viewModel.insertAlert(start = System.currentTimeMillis(), end = calendar.timeInMillis)
+            if (calendar.timeInMillis > System.currentTimeMillis())
+                viewModel.insertAlert(
+                    start = System.currentTimeMillis(),
+                    end = calendar.timeInMillis
+                )
+            else
+                Toast.makeText(
+                    requireActivity(),
+                    "please,Enter valid Date and Time",
+                    Toast.LENGTH_SHORT
+                ).show()
             myAlert.dismiss()
             viewModel.dismissAddAlertCompleted()
         }
@@ -172,6 +207,63 @@ class WeatherAlertsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
 
         myAlert.show()
 
+    }
+
+
+    private fun checkDrawOverAppsPermissionsDialog() {
+        AlertDialog.Builder(requireActivity()).setTitle("Permission request").setCancelable(false)
+            .setMessage("please allow Draw Over Apps permission to be able to use application properly")
+            .setPositiveButton(
+                "Yes"
+            ) { dialog, which -> drawOverAppPermission() }.setNegativeButton(
+                "No"
+            ) { dialog, which -> errorWarningForNotGivingDrawOverAppsPermissions() }.show()
+    }
+
+    private fun errorWarningForNotGivingDrawOverAppsPermissions() {
+        AlertDialog.Builder(requireActivity()).setTitle("Warning").setCancelable(false).setMessage(
+            """
+            Unfortunately the display over other apps permission is not granted so the application might not behave properly 
+            To enable this permission kindly restart the application
+            """.trimIndent()
+        )
+            .setPositiveButton("Ok") { dialog, which -> }.show()
+    }
+
+    fun runBackgroundPermissions() {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+            if (Build.BRAND.equals("xiaomi", ignoreCase = true)) {
+                val intent = Intent()
+                intent.component = ComponentName(
+                    "com.miui.securitycenter",
+                    "com.miui.permcenter.autostart.AutoStartManagementActivity"
+                )
+                startActivity(intent)
+            } else if (Build.BRAND.equals(
+                    "Honor",
+                    ignoreCase = true
+                ) || Build.BRAND.equals("HUAWEI", ignoreCase = true)
+            ) {
+                val intent = Intent()
+                intent.component = ComponentName(
+                    "com.huawei.systemmanager",
+                    "com.huawei.systemmanager.optimize.process.ProtectActivity"
+                )
+                startActivity(intent)
+            }
+        }
+    }
+
+    fun drawOverAppPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(requireActivity())) {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:${requireActivity().packageName}")
+                )
+                startActivityForResult(intent, 80)
+            }
+        }
     }
 
 }

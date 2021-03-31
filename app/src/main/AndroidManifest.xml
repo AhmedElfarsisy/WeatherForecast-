@@ -3,14 +3,15 @@
     package="com.iti.elfarsisy.mad41.myapplication">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <!--Service foreground permissions -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- Service foreground permissions -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!--Location permissions -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Location permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
         android:name=".util.MyApplication"
@@ -20,9 +21,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherForcast">
+
+
+
+
         <service
             android:name=".services.WeatherAlertService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <receiver
             android:name=".broadcast.WeatherAlertBroadcastReceiver"

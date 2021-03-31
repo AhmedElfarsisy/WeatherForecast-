@@ -24,7 +24,7 @@ class TodayAdapter : ListAdapter<HourlyItem, TodayAdapter.TodayHolder>(DiffCallB
             oldItem.dt == newItem.dt
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodayHolder {
-        return TodayHolder(HourlyItemBinding.inflate(LayoutInflater.from(parent.context)))
+        return TodayHolder(HourlyItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
     override fun onBindViewHolder(holder: TodayHolder, position: Int) {
         val item = getItem(position)

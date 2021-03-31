@@ -17,11 +17,13 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.google.android.gms.location.*
 import com.iti.elfarsisy.mad41.myapplication.R
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.WeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.databinding.FragmentHomeBinding
+import com.iti.elfarsisy.mad41.myapplication.helper.GPS_LOCATION_VALUES
 import com.iti.elfarsisy.mad41.myapplication.helper.LOCATION_PERMISSION_ID
 import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 import timber.log.Timber
@@ -32,7 +34,10 @@ class HomeFragment : Fragment() {
 
     //fragment Extension
     private val homeViewModel by viewModels<HomeViewModel> {
-        HomeViewModelFactory(WeatherRepo(MyApplication.getContext()), UserSettingRepo(MyApplication.getContext()))
+        HomeViewModelFactory(
+            WeatherRepo(MyApplication.getContext()),
+            UserSettingRepo(MyApplication.getContext())
+        )
     }
     private lateinit var binding: FragmentHomeBinding
     override fun onCreateView(
@@ -44,7 +49,17 @@ class HomeFragment : Fragment() {
         locationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
         binding.mHomeViewModel = homeViewModel
         binding.lifecycleOwner = this
-        getMyLocation()
+
+        homeViewModel.locationToolLive.observe(viewLifecycleOwner, Observer { liveTool ->
+            if (liveTool.equals(GPS_LOCATION_VALUES)){
+                getMyLocation()
+            }else{
+                homeViewModel.getLocation()
+            }
+
+        })
+
+
         return binding.root
     }
 
@@ -52,7 +67,7 @@ class HomeFragment : Fragment() {
     private fun checkPermissions(): Boolean {
         var isPemissionsGranted = false
         if (ActivityCompat.checkSelfPermission(
-               MyApplication.getContext(),
+                MyApplication.getContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 MyApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION

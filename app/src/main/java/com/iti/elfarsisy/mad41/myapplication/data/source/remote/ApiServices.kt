@@ -39,6 +39,7 @@ interface WeatherApiServices {
         @Query("appid") appID: String
     ): Response<WeatherData>
 
+    @GET("onecall")
     suspend fun fetchWeatherAlerts(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,

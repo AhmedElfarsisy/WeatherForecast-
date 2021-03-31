@@ -26,4 +26,6 @@
     <string name="delete">Delete</string>
     <string name="from">From</string>
     <string name="to">To</string>
+    <string name="weather_condition">Weather condition</string>
+    <string name="dismiss">dismiss</string>
 </resources>

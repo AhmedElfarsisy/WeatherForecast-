@@ -117,7 +117,7 @@ fun bindDay(textView: TextView, timeStamp: Int) {
     val sdf = SimpleDateFormat("EEEE")
     val netDate = Date(timeStamp * 1000L)
     val date = sdf.format(netDate)
-    textView.text = date.subSequence(0, 3)
+    textView.text = date
 }
 
 @BindingAdapter("fullDateParser")
