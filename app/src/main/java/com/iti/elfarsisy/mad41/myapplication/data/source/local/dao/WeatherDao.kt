@@ -16,5 +16,5 @@ interface WeatherDao {
     suspend fun delete(latId: Double)
 
     @Query("SELECT * FROM weather_data WHERE lat=:latId")
-    fun getWeatherById(latId: Double): LiveData<WeatherData>
+    fun getWeatherById(latId: Double): LiveData<WeatherData>?
 }

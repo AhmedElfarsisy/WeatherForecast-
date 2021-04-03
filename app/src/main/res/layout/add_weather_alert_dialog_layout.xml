@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-<variable
-    name="mAlertViewModel"
-    type="com.iti.elfarsisy.mad41.myapplication.ui.alerts.WeatherAlertsViewModel" />
+        <variable
+            name="mAlertViewModel"
+            type="com.iti.elfarsisy.mad41.myapplication.ui.alerts.WeatherAlertsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +17,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView4"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_16"
             android:backgroundTint="@color/background"
             android:elevation="@dimen/raduis_16"
@@ -29,7 +29,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/imageView12"
@@ -48,7 +48,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:gravity="center"
-                    android:text="pick weather alert time"
+                    android:text="@string/pick_weather_alert_time"
                     android:textColor="@color/primaryVariant"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView12"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -138,12 +138,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
                     android:text="@string/add"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/radioGroup"
                     app:layout_constraintEnd_toStartOf="@+id/cancelButton"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -161,6 +160,36 @@
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/add_btn" />
 
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_64"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <RadioButton
+                        android:id="@+id/radioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/notification"
+                        android:checked="@{mAlertViewModel.alertTool.equals(`notification`)? true:false}"
+                        android:onClick="@{()-> mAlertViewModel.setNotificationSetting()}"
+                        android:textColor="@color/primaryVariant" />
+
+                    <RadioButton
+                        android:id="@+id/radioButton2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@{mAlertViewModel.alertTool.equals(`alarm`)? true:false}"
+                        android:onClick="@{()-> mAlertViewModel.setAlertSetting()}"
+                        android:text="@string/alarm"
+                        android:textColor="@color/primaryVariant" />
+                </RadioGroup>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 

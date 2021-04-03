@@ -31,7 +31,7 @@ data class WeatherData(
     @field:SerializedName("hourly")
     val hourly: List<HourlyItem>,
     @field:SerializedName("minutely")
-    val minutely: List<MinutelyItem>,
+    val minutely: List<MinutelyItem>? = null,
     @field:SerializedName("alerts")
-    val alerts: MutableList<WeatherAlerts>
+    val alerts: MutableList<WeatherAlerts>? = null
 ) : Parcelable

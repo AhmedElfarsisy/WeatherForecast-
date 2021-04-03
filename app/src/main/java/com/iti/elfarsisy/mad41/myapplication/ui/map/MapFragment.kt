@@ -69,13 +69,23 @@ class MapFragment : Fragment() {
                 markerOptions.position(it)
                 markerOptions.title("${it.latitude},${it.longitude}")
                 googleMap.clear()
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 10f));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 10f))
                 googleMap.addMarker(markerOptions)
                 viewModel.setLocation(it.latitude, it.longitude)
             }
         }
         return binding.root
     }
+
+
+
+
+
+
+
+
+
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

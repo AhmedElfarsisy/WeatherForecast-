@@ -42,5 +42,10 @@
     <string name="add">Add</string>
     <string name="weather_condition">Weather condition</string>
     <string name="dismiss">dismiss</string>
+    <string name="notification">Notification</string>
+    <string name="alarm">Alarm</string>
+    <string name="pick_weather_alert_time">pick weather alert time</string>
+    <string name="no_alerts">No alerts</string>
+    <string name="no_favorite_places">No Favorite Places</string>
     <!--    @{@string/quote_format(gameViewModel.word)-->
 </resources>

@@ -1,7 +1,10 @@
 package com.iti.elfarsisy.mad41.myapplication.ui.home
 
-import android.location.Address
-import android.location.Geocoder
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.iti.elfarsisy.mad41.myapplication.data.model.DailyItem
 import com.iti.elfarsisy.mad41.myapplication.data.model.HourlyItem
@@ -13,13 +16,13 @@ import com.iti.elfarsisy.mad41.myapplication.helper.*
 import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 import kotlinx.coroutines.*
 import timber.log.Timber
-import java.io.IOException
 
 class HomeViewModel(
     private val weatherRepo: IWeatherRepo,
     private val userSettingRepo: UserSettingRepo
 ) : ViewModel() {
 
+    //region Properties
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState> = _networkState
     private val _weatherResponseLive = MediatorLiveData<WeatherData>()
@@ -32,10 +35,11 @@ class HomeViewModel(
     val cityLive: LiveData<String> = _cityLive
     private val _locationToolLive = MutableLiveData<String>()
     val locationToolLive: LiveData<String> = _locationToolLive
-
-    private lateinit var units: String;
-    private lateinit var lang: String;
-
+    private lateinit var units: String
+    private lateinit var lang: String
+    private val _isOnlineLive = MutableLiveData<Boolean>()
+    val isOnlineLive: LiveData<Boolean> = _isOnlineLive
+// endregion
 
     init {
         updateNetworkState(NetworkState.LOADING)
@@ -47,7 +51,6 @@ class HomeViewModel(
         _locationToolLive.value = userSettingRepo.read(LOCATION_tool_KEY, GPS_LOCATION_VALUES)!!
         lang = userSettingRepo.read(APP_LOCAL_KEY, APP_LOCAL_EN_VALUES)!!
         _locationToolLive.postValue(userSettingRepo.read(LOCATION_tool_KEY, GPS_LOCATION_VALUES))
-
     }
 
     private fun decideUnit(unit: String) {
@@ -59,7 +62,17 @@ class HomeViewModel(
         }
     }
 
-    private fun fetchWeatherData(lat: Double, lon: Double) {
+    fun fetchWeatherData(lat: Double, lon: Double) {
+        if (isOnline(MyApplication.getContext())) {
+            _isOnlineLive.postValue(false)
+            fetchOnlineWeatherData(lat, lon)
+        } else {
+            _isOnlineLive.postValue(true)
+            fetchWeatherDataFromLocal(lat, lon)
+        }
+    }
+
+    private fun fetchOnlineWeatherData(lat: Double, lon: Double) {
         viewModelScope.launch {
             val weatherResponse =
                 async { weatherRepo.fetchWeatherData(lat, lon, lang = lang, units) }
@@ -77,7 +90,6 @@ class HomeViewModel(
                     Timber.i("Successful API $lat, $lon")
                 } else {
                     updateNetworkState(NetworkState.ERROR)
-                    fetchWeatherDataFromLocal(lat, lon)
                     Timber.i("${weatherResponse.await().message()}")
                 }
             }
@@ -85,13 +97,14 @@ class HomeViewModel(
         }
     }
 
-    private fun fetchWeatherDataFromLocal(lat: Double, lon: Double) {
+    private fun fetchWeatherDataFromLocal(latitude: Double, lon: Double) {
+        val lat = String.format("%.4f", latitude).toDouble()
         weatherRepo.getWeatherDataById(lat)?.let { liveWeather ->
             weatherResponseLive.addSource(liveWeather) {
-                weatherResponseLive.postValue(it)
                 dailyResponseLive.postValue(it.daily)
                 hourlyResponseLive.postValue(it.hourly)
             }
+            updateNetworkState(NetworkState.DONE)
         }
     }
 
@@ -100,9 +113,9 @@ class HomeViewModel(
     }
 
     fun setLatAndLong(latitude: Double, longitude: Double) {
-        val locationDescription = getLocationDescription(latitude, longitude)
-        fetchWeatherData(latitude, longitude)
-        _cityLive.postValue(locationDescription?.subAdminArea)
+        userSettingRepo.write(LAT_KEY, latitude.toString())
+        userSettingRepo.write(LON_KEY, longitude.toString())
+        getLocation()
     }
 
     private fun insertWeatherDataToLocal(weatherData: WeatherData) {
@@ -112,9 +125,13 @@ class HomeViewModel(
     }
 
     fun getLocation() {
-        val userLat = userSettingRepo.read(LAT_KEY, "" + 0.0)?.toDouble()
-        val userLon = userSettingRepo.read(LON_KEY, "" + 0.0)?.toDouble()
-        setLatAndLong(userLat!!, userLon!!)
+        val userLat = userSettingRepo.read(LAT_KEY, 0.0.toString())?.toDouble() ?: 0.0
+        val userLon = userSettingRepo.read(LON_KEY, 0.0.toString())?.toDouble() ?: 0.0
+        val locationDescription = getLocationDescription(userLat, userLon)
+        _cityLive.postValue(locationDescription?.subAdminArea)
+        fetchWeatherData(userLat, userLon)
     }
+
+
 }
 

@@ -29,5 +29,5 @@ interface IWeatherRepo {
 
     suspend fun deleteWeatherDataById(latId: Double)
 
-    fun getWeatherDataById(latId: Double): LiveData<WeatherData>
+    fun getWeatherDataById(latId: Double): LiveData<WeatherData>?
 }

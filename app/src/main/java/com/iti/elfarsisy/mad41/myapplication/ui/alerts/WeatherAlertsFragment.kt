@@ -140,7 +140,6 @@ class WeatherAlertsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         myAlert.show()
     }
 
-
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         Timber.i("@@@@@@@@@Date $year::::M:::: $month::::DOM::::: $dayOfMonth")
         pickedYear = year

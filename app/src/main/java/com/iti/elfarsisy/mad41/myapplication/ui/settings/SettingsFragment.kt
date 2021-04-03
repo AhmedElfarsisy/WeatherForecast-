@@ -9,9 +9,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.iti.elfarsisy.mad41.myapplication.MainActivity
 import com.iti.elfarsisy.mad41.myapplication.R
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
 import com.iti.elfarsisy.mad41.myapplication.databinding.SettingsFragmentBinding
+import com.iti.elfarsisy.mad41.myapplication.util.Language
 import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 
 class SettingsFragment : Fragment() {
@@ -26,13 +28,22 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.settings_fragment, container, false)
+
+        binding.mSettingViewModel = viewModel
+        binding.lifecycleOwner = this
+//        LiveData Observers
+        observeOnLiveData()
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        binding.mSettingViewModel = viewModel
-        binding.lifecycleOwner = this
+    private fun observeOnLiveData() {
+        viewModel.langLiveData.observe(viewLifecycleOwner, Observer { localPair ->
+            if (localPair.second) {
+                Language.setLanguage(context = requireContext(), language = localPair.first)
+                (activity as MainActivity).recreate()
+                viewModel.completeLocalChange()
+            }
+        })
 
         viewModel.navigatorToMap.observe(viewLifecycleOwner, Observer { isNavigate ->
             if (isNavigate) {
@@ -42,5 +53,6 @@ class SettingsFragment : Fragment() {
             }
         })
     }
+
 
 }

@@ -1,29 +1,13 @@
 package com.iti.elfarsisy.mad41.myapplication.util
 
-import android.content.res.Configuration
-import android.view.ContextThemeWrapper
+
+import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
-import java.util.*
 
-class BaseActivity : AppCompatActivity() {
-
-    companion object {
-        public var dLocale: Locale? = null
+open class BaseActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        Language.setLanguage(this, Language.currentLanguage(this))
+        super.onCreate(savedInstanceState, persistentState)
     }
-
-    init {
-        updateConfig(this)
-    }
-
-    private fun updateConfig(wrapper: ContextThemeWrapper) {
-        if(dLocale==Locale("") ) // Do nothing if dLocale is null
-            return
-
-        Locale.setDefault(dLocale)
-        val configuration = Configuration()
-        configuration.setLocale(dLocale)
-        wrapper.applyOverrideConfiguration(configuration)
-    }
-
-
 }

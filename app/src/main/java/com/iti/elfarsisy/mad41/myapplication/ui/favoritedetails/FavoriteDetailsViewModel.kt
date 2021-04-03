@@ -1,5 +1,9 @@
 package com.iti.elfarsisy.mad41.myapplication.ui.favoritedetails
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.lifecycle.*
 import com.iti.elfarsisy.mad41.myapplication.data.model.DailyItem
 import com.iti.elfarsisy.mad41.myapplication.data.model.HourlyItem
@@ -8,6 +12,7 @@ import com.iti.elfarsisy.mad41.myapplication.data.repo.IWeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
 import com.iti.elfarsisy.mad41.myapplication.data.source.remote.NetworkState
 import com.iti.elfarsisy.mad41.myapplication.helper.*
+import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 import kotlinx.coroutines.*
 import timber.log.Timber
 
@@ -18,6 +23,7 @@ class FavoriteDetailsViewModel(
     private val userSettingRepo: UserSettingRepo
 ) :
     ViewModel() {
+    //    region PROPERTIES
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState> = _networkState
     private val _weatherResponseLive = MediatorLiveData<WeatherData>()
@@ -30,15 +36,19 @@ class FavoriteDetailsViewModel(
     val cityLive: LiveData<String> = _cityLive
     private val _locationToolLive = MutableLiveData<String>()
     val locationToolLive: LiveData<String> = _locationToolLive
-
-    private lateinit var units: String;
-    private lateinit var lang: String;
-
+    private lateinit var units: String
+    private lateinit var lang: String
+    private val _isOnlineLive = MutableLiveData<Boolean>()
+    val isOnlineLive: LiveData<Boolean> = _isOnlineLive
+//    endregion
 
     init {
         updateNetworkState(NetworkState.LOADING)
+
         readUserSettings()
+
         fetchWeatherData(lat.toDouble(), lon.toDouble())
+
         setLatAndLong(lat.toDouble(), lon.toDouble())
     }
 
@@ -61,33 +71,51 @@ class FavoriteDetailsViewModel(
         }
     }
 
-    private fun fetchWeatherData(lat: Double, lon: Double) {
-        viewModelScope.launch {
-            val weatherResponse =
-                async { weatherRepo.fetchWeatherData(lat, lon, lang = lang, units) }
-            getLocationDescription(lat, lon)
-            if (weatherResponse.await().isSuccessful) {
-                _weatherResponseLive.postValue(weatherResponse.await().body())
-                _dailyResponseLive.postValue(weatherResponse.await().body()?.daily)
-                _hourlyResponseLive.postValue(weatherResponse.await().body()?.hourly)
-                withContext(Dispatchers.IO) {
-                    weatherResponse.await().body()?.let {
-                        insertWeatherDataToLocal(it)
-                    }
-                }
-                updateNetworkState(NetworkState.DONE)
-                Timber.i("Successful API $lat, $lon")
-            } else {
-                updateNetworkState(NetworkState.ERROR)
-                fetchWeatherDataFromLocal(lat, lon)
-                Timber.i("${weatherResponse.await().message()}")
-            }
+    fun fetchWeatherData(lat: Double, lon: Double) {
+        if (isOnline(MyApplication.getContext())) {
+            _isOnlineLive.postValue(false)
+            fetchOnlineWeatherData(lat, lon)
+        } else {
+            _isOnlineLive.postValue(true)
+            fetchWeatherDataFromLocal(lat, lon)
         }
     }
 
+    private fun fetchOnlineWeatherData(lat: Double, lon: Double) {
+        viewModelScope.launch {
+            val weatherResponse =
+                async { weatherRepo.fetchWeatherData(lat, lon, lang = lang, units) }
+            weatherResponse.await()?.let { response ->
+                if (response.isSuccessful) {
+                    _weatherResponseLive.postValue(response.body())
+                    _dailyResponseLive.postValue(response.body()?.daily)
+                    _hourlyResponseLive.postValue(response.body()?.hourly)
+                    withContext(Dispatchers.IO) {
+                        response.body()?.let {
+                            insertWeatherDataToLocal(it)
+                        }
+                    }
+                    updateNetworkState(NetworkState.DONE)
+                    Timber.i("Successful API $lat, $lon")
+                } else {
+                    updateNetworkState(NetworkState.ERROR)
+                    Timber.i("${weatherResponse.await().message()}")
+                }
+            }
 
-    private fun updateNetworkState(state: NetworkState) {
-        _networkState.postValue(state)
+        }
+    }
+
+    private fun fetchWeatherDataFromLocal(lat: Double, lon: Double) {
+        weatherRepo.getWeatherDataById(lat)?.let { liveWeather ->
+            weatherResponseLive.addSource(liveWeather) {
+                weatherResponseLive.postValue(it)
+                Timber.i("$it")
+                dailyResponseLive.postValue(it.daily)
+                hourlyResponseLive.postValue(it.hourly)
+            }
+            updateNetworkState(NetworkState.DONE)
+        }
     }
 
     private fun setLatAndLong(latitude: Double, longitude: Double) {
@@ -104,13 +132,9 @@ class FavoriteDetailsViewModel(
         }
     }
 
-    private fun fetchWeatherDataFromLocal(lat: Double, lon: Double) {
-      weatherRepo.getWeatherDataById(lat)?.let {liveWeather->
-            weatherResponseLive.addSource(liveWeather) {
-                weatherResponseLive.postValue(it)
-            }
-        }
-
+    private fun updateNetworkState(state: NetworkState) {
+        _networkState.postValue(state)
     }
+
 
 }

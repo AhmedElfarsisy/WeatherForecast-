@@ -43,7 +43,7 @@ class WeatherRepo(val application: Context) : IWeatherRepo {
         databaseRoom.weatherDao().delete(latId)
     }
 
-    override fun getWeatherDataById(latId: Double): LiveData<WeatherData> {
+    override fun getWeatherDataById(latId: Double): LiveData<WeatherData>? {
         return databaseRoom.weatherDao().getWeatherById(latId)
     }
 

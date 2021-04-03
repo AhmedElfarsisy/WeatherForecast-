@@ -7,10 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 import com.iti.elfarsisy.mad41.myapplication.R
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.WeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.databinding.FavoriteDetailsFragmentBinding
+import com.iti.elfarsisy.mad41.myapplication.helper.showError
 import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 
 class FavoriteDetailsFragment : Fragment() {
@@ -34,13 +37,13 @@ class FavoriteDetailsFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.favorite_details_fragment, container, false)
         binding.mViewModel = viewModel
         binding.lifecycleOwner = this
+
+        viewModel.isOnlineLive.observe(viewLifecycleOwner, Observer { isOnline ->
+                if (isOnline){
+                    showError("Network Error please check connection",requireView())
+                }
+        })
+
         return binding.root
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-
-    }
-
 }

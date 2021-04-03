@@ -25,6 +25,7 @@ import com.iti.elfarsisy.mad41.myapplication.data.repo.WeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.databinding.FragmentHomeBinding
 import com.iti.elfarsisy.mad41.myapplication.helper.GPS_LOCATION_VALUES
 import com.iti.elfarsisy.mad41.myapplication.helper.LOCATION_PERMISSION_ID
+import com.iti.elfarsisy.mad41.myapplication.helper.showError
 import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 import timber.log.Timber
 
@@ -49,18 +50,29 @@ class HomeFragment : Fragment() {
         locationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
         binding.mHomeViewModel = homeViewModel
         binding.lifecycleOwner = this
+        binding.swipRefresh.setOnRefreshListener {
+            homeViewModel.getLocation()
+            binding.swipRefresh.isRefreshing = false
 
-        homeViewModel.locationToolLive.observe(viewLifecycleOwner, Observer { liveTool ->
-            if (liveTool.equals(GPS_LOCATION_VALUES)){
-                getMyLocation()
-            }else{
-                homeViewModel.getLocation()
+        }
+        observeOnLiveData()
+        return binding.root
+    }
+
+    private fun observeOnLiveData() {
+        homeViewModel.isOnlineLive.observe(viewLifecycleOwner, Observer { isOnline ->
+            if (isOnline) {
+                showError("Network Error please check connection", requireView())
             }
-
         })
 
-
-        return binding.root
+        homeViewModel.locationToolLive.observe(viewLifecycleOwner, Observer { liveTool ->
+            if (liveTool.equals(GPS_LOCATION_VALUES)) {
+                getMyLocation()
+            } else {
+                homeViewModel.getLocation()
+            }
+        })
     }
 
     //check if the user Give permissions to get his location
@@ -81,31 +93,23 @@ class HomeFragment : Fragment() {
 
     // get Location Permissions from user (COARSE & FINE )
     private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            requireActivity(), arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ),
-            LOCATION_PERMISSION_ID
+        requestPermissions(
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+            ), LOCATION_PERMISSION_ID
         )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (checkPermissions()) {
-            getMyLocation();
-        }
+
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_ID) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getMyLocation();
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getMyLocation()
             }
         }
     }
@@ -115,7 +119,6 @@ class HomeFragment : Fragment() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
                 requestLocationData()
-//                descriptionTV.setText("")
             } else {
                 enableLocation()
             }
