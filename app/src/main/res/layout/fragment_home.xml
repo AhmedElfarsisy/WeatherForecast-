@@ -10,6 +10,11 @@
             type="com.iti.elfarsisy.mad41.myapplication.ui.home.HomeViewModel" />
     </data>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -318,5 +323,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>

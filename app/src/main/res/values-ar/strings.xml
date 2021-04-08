@@ -20,12 +20,19 @@
     <string name="language">اللغة</string>
     <string name="fahrenheit">فهرنهايت</string>
     <string name="keliven">كلفن.</string>
-    <string name="celsius">"سيلسيوس "</string>
-    <string name="add_location_btn">Add Location</string>
-    <string name="cancel">Cancel</string>
-    <string name="delete">Delete</string>
-    <string name="from">From</string>
-    <string name="to">To</string>
-    <string name="weather_condition">Weather condition</string>
-    <string name="dismiss">dismiss</string>
+    <string name="celsius"> مئوية</string>
+    <string name="add_location_btn">إضافة موقع</string>
+    <string name="cancel">إلغاء</string>
+    <string name="delete">مسح</string>
+    <string name="from">من</string>
+    <string name="to">إلى</string>
+    <string name="weather_condition"> حالة الطقس</string>
+    <string name="dismiss">ايقاف</string>
+    <string name="notification">اشعارات</string>
+    <string name="alarm">منبة</string>
+    <string name="pick_weather_alert_time">اختر موعد</string>
+    <string name="pick_location">اختر موقع</string>
+    <string name="add">إضافة</string>
+    <string name="no_alerts">"لا يوجد تنبيهات "</string>
+    <string name="no_favorite_places">لا يوجد تفضيلات</string>
 </resources>

@@ -66,7 +66,10 @@ class FavoriteFragment : Fragment(), OnFavoriteClickListner {
                 val lat = pairNavigation.first!!.toFloat()
                 val lon = pairNavigation.second!!.toFloat()
                 val action =
-                    FavoriteFragmentDirections.actionNavFavoriteFragmentToFavoriteDetailsFragment(lat, lon)
+                    FavoriteFragmentDirections.actionNavFavoriteFragmentToFavoriteDetailsFragment(
+                        lat,
+                        lon
+                    )
                 findNavController().navigate(action)
                 viewModel.completeNavigationToDetails();
             }
@@ -104,15 +107,5 @@ class FavoriteFragment : Fragment(), OnFavoriteClickListner {
 
     }
 
-    override fun onStart() {
-        super.onStart()
-//        viewModel.refreshUI()
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        viewModel.refreshUI()
-
-    }
 
 }

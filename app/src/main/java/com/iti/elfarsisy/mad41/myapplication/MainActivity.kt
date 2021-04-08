@@ -3,7 +3,6 @@ package com.iti.elfarsisy.mad41.myapplication
 
 import android.os.Bundle
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -12,10 +11,10 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import com.iti.elfarsisy.mad41.myapplication.util.BaseActivity
 
 
-
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -43,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -54,11 +54,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
     }
-
-
-
-
-
 
 
 }

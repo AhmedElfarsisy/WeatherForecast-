@@ -15,8 +15,7 @@ import com.iti.elfarsisy.mad41.myapplication.data.model.WeatherData
 import com.iti.elfarsisy.mad41.myapplication.data.repo.SavedPlacesRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.WeatherRepo
-import com.iti.elfarsisy.mad41.myapplication.helper.LAT_KEY
-import com.iti.elfarsisy.mad41.myapplication.helper.LON_KEY
+import com.iti.elfarsisy.mad41.myapplication.helper.*
 import com.iti.elfarsisy.mad41.myapplication.services.WeatherAlertService
 import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 import kotlinx.coroutines.*
@@ -25,64 +24,90 @@ import timber.log.Timber
 
 
 class WeatherAlertBroadcastReceiver : BroadcastReceiver() {
+    //region Properties
     val placeRepo = SavedPlacesRepo(MyApplication.getContext())
     lateinit var fetchWeatherAlerts: Deferred<Response<WeatherData>>
     private val weatherAlertsWeatherRepo = WeatherRepo(MyApplication.getContext())
     var alerts: MutableList<WeatherAlerts> = ArrayList<WeatherAlerts>()
     val userSettingRepo = UserSettingRepo(MyApplication.getContext())
     private lateinit var intentService: Intent
+    private lateinit var alertTool: String
+    private var lat: Double = 0.0
+    private var lon: Double = 0.0
+
+    //    endregion
 
     override fun onReceive(context: Context, intent: Intent) {
-        Timber.i("onReceive ####### lets enter coroutineScope")
-        val lat = userSettingRepo.read(LAT_KEY, "" + 0.0)?.toDouble()
-        val lon = userSettingRepo.read(LON_KEY, "" + 0.0)?.toDouble()
-        Timber.i("onReceive ####### my location $lat   $lon")
+        readUserSetting()
         intentService = Intent(context, WeatherAlertService::class.java)
+
         //region make alert API Call
-        CoroutineScope(Dispatchers.IO).launch {
-            fetchWeatherAlerts =
-                async { weatherAlertsWeatherRepo.fetchWeatherAlerts(lat!!, lon!!) }
-            Timber.i("onReceive ####### await after call  alerts")
-            fetchWeatherAlerts.await()?.let { response ->
-                if (response.isSuccessful) {
-                    Timber.i("onReceive ####### response succeeded")
-                    response.body()?.alerts?.let { weatherAlertsList ->
-                        alerts = weatherAlertsList
-                        Timber.i("onReceive ####### My Alerts $alerts")
-                    }
-                    withContext(Dispatchers.Main) {
-                        if (alerts.isNullOrEmpty()) {
-                            Timber.i("onReceive ####### no no no alerts")
-                            showNotification("Weather is fine", context)
-                        } else {
-                            alerts.get(alerts.lastIndex).description?.let {
-                                Timber.i("onReceive ####### back with alerts")
+        if (isOnline(context)) {
+            CoroutineScope(Dispatchers.IO).launch {
+                fetchWeatherAlerts =
+                    async { weatherAlertsWeatherRepo.fetchWeatherAlerts(lat, lon) }
+                fetchWeatherAlerts.await().let { response ->
+                    if (response.isSuccessful) {
+                        response.body()?.alerts?.filter { !it.description.isNullOrEmpty() }?.take(1)
+                            ?.let {
+                                alerts.add(it[0])
+                            }
+                        //region  Alert Tool Notification or Alert -Dialog & Sound
+                        withContext(Dispatchers.Main) {
+                            prepareWeatherConditionNotification(context, intent)
+                        }
+                        //endregion
+
+                        if (alertTool == ALERT_ALARM_VALUE) {
+                            alerts.get(0).description?.let {
                                 intentService.putExtra("description", it)
-                                showNotification(it, context)
+                                startAlarmService(context, intent)
                             }
                         }
-                        Timber.i("onReceive ####### lets startAlarmService")
-                        startAlarmService(context, intent)
                     }
                 }
             }
         }
         //endregion
 
-        //region delete alert from DB
+        deleteAlertFromDatabase(intent)
+    }
+
+    private fun readUserSetting() {
+        alertTool = userSettingRepo.read(ALERT_TOOL_KEY, ALERT_NOTIFICATION_VALUE)
+            ?: ALERT_NOTIFICATION_VALUE
+        lat = userSettingRepo.read(LAT_KEY, 0.0.toString())?.toDouble() ?: 0.0
+        lon = userSettingRepo.read(LON_KEY, 0.0.toString())?.toDouble() ?: 0.0
+    }
+
+    //region  Alert Tool Notification or Alert -Dialog & Sound
+    private fun prepareWeatherConditionNotification(context: Context, intent: Intent) {
+        if (alertTool == ALERT_NOTIFICATION_VALUE) {
+            if (alerts.isNullOrEmpty()) {
+                showNotification("Weather is fine", context)
+            } else {
+                alerts.get(0).description?.let {
+                    Timber.i("onReceive ######## showWeatherAlertToUser ")
+                    intentService.putExtra("description", it)
+                    showNotification(it, context)
+                }
+            }
+        }
+    }
+    //endregion
+
+    //region delete alert from DB
+    private fun deleteAlertFromDatabase(intent: Intent) {
         CoroutineScope(Dispatchers.IO).launch {
             intent?.let {
                 val id = intent.getLongExtra("id", 0)
                 placeRepo.deleteAlert(id)
             }
         }
-        //endregion
-
-        //region notification show and Alarm alert from DB
-
-        //endregion
     }
+    //endregion
 
+    //region startAlarmService
     private fun startAlarmService(context: Context, intent: Intent) {
         intentService.putExtra("id", intent.getLongExtra("id", 0))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -91,8 +116,9 @@ class WeatherAlertBroadcastReceiver : BroadcastReceiver() {
             context.startService(intentService)
         }
     }
+    //endregion
 
-
+    //region showNotification
     private fun showNotification(notificationMessage: String, context: Context) {
         lateinit var notificationManager: NotificationManager
         val CHANNEL_ID = "100"
@@ -108,7 +134,7 @@ class WeatherAlertBroadcastReceiver : BroadcastReceiver() {
             val builder: NotificationCompat.Builder =
                 NotificationCompat.Builder(context, CHANNEL_ID)
                     .setAutoCancel(true)
-                    .setSmallIcon(R.drawable.ic_humidity)
+                    .setSmallIcon(R.drawable.ic_weather)
                     .setContentTitle("Weather forecast")
                     .setContentText(notificationMessage)
                     .setContentIntent(pendingIntent)
@@ -118,6 +144,6 @@ class WeatherAlertBroadcastReceiver : BroadcastReceiver() {
             notificationManager.notify(1, builder.build())
         }
     }
-
+    //endregion
 
 }

@@ -11,6 +11,11 @@ class SettingsViewModel(private val userSettingRepo: UserSettingRepo) : ViewMode
     private val _navigatorToMap = MutableLiveData<Boolean>()
     val navigatorToMap: LiveData<Boolean> = _navigatorToMap
 
+    private val _langLiveData = MutableLiveData<Pair<String, Boolean>>()
+    val langLiveData: LiveData<Pair<String, Boolean>> = _langLiveData
+
+//        Language.setLanguage(context = requireContext(), language = lang)
+//                (activity as MainActivity).recreate()
 
     val locationMethod = MutableLiveData<String>()
     val language = MutableLiveData<String>()
@@ -24,17 +29,23 @@ class SettingsViewModel(private val userSettingRepo: UserSettingRepo) : ViewMode
     private fun readSettingsFromSharedPrefrances() {
         language.value = userSettingRepo.read(APP_LOCAL_KEY, APP_LOCAL_EN_VALUES)
         locationMethod.value = userSettingRepo.read(LOCATION_tool_KEY, GPS_LOCATION_VALUES)
-        tempMeasure.value=userSettingRepo.read(TEMP_MEASUREMENT_KEY,TEMP_CELSIUS_VALUES)
-        windMeasure.value=userSettingRepo.read(WIND_SPEED_MEASUREMENT_KEY,WIND_SPEED_METER_SEC_VALUES)
+        tempMeasure.value = userSettingRepo.read(TEMP_MEASUREMENT_KEY, TEMP_CELSIUS_VALUES)
+        windMeasure.value =
+            userSettingRepo.read(WIND_SPEED_MEASUREMENT_KEY, WIND_SPEED_METER_SEC_VALUES)
     }
 
     //Lang
     fun chooseArabic() {
         userSettingRepo.write(APP_LOCAL_KEY, APP_LOCAL_AR_VALUES)
+        _langLiveData.value = Pair(APP_LOCAL_AR_VALUES, true)
+        language.value = userSettingRepo.read(APP_LOCAL_KEY, APP_LOCAL_EN_VALUES)
     }
 
     fun chooseEnglish() {
         userSettingRepo.write(APP_LOCAL_KEY, APP_LOCAL_EN_VALUES)
+        _langLiveData.value = Pair(APP_LOCAL_EN_VALUES, true)
+        language.value = userSettingRepo.read(APP_LOCAL_KEY, APP_LOCAL_EN_VALUES)
+
     }
 
     //Location
@@ -75,6 +86,11 @@ class SettingsViewModel(private val userSettingRepo: UserSettingRepo) : ViewMode
 
     fun completNavigation() {
         _navigatorToMap.value = false
+    }
+
+    fun completeLocalChange() {
+        _langLiveData.value = Pair(APP_LOCAL_EN_VALUES, false)
+
     }
 
 }

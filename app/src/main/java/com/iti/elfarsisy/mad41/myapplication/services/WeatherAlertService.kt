@@ -30,6 +30,7 @@ class WeatherAlertService : Service() {
     lateinit var mediaPlayer: MediaPlayer
     override fun onCreate() {
         super.onCreate()
+        showNotification("weather forecast")
         mDialogView = LayoutInflater.from(this).inflate(R.layout.custom_alert_dialog, null)
         //Add the view to the window.
         //Add the view to the window.
@@ -51,12 +52,9 @@ class WeatherAlertService : Service() {
         mWindowManager?.let { it.addView(mDialogView, params) }
         val dismiss: Button = mDialogView.findViewById(R.id.dismiss_btn)
         weatherDescTV = mDialogView.findViewById(R.id.`weatherِ_alert_textView`)
-
         dismiss.setOnClickListener {
             stopSelf()
         }
-
-
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         mediaPlayer = MediaPlayer.create(this, R.raw.alarmsound)
         mediaPlayer.isLooping = true
@@ -72,7 +70,6 @@ class WeatherAlertService : Service() {
             }
         }
         weatherDescTV.text = weatherDesc
-        showNotification("weather forecast")
         mediaPlayer.start()
         return START_STICKY
     }
@@ -86,15 +83,14 @@ class WeatherAlertService : Service() {
             val channel = NotificationChannel(CHANNEL_ID, channelName, importance)
             channel.description = "weather is fine"
             notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager?.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(channel)
             val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_humidity)
+                .setSmallIcon(R.drawable.ic_weather)
                 .setContentTitle(notificationTitle)
                 .setContentText("weather notification")
                 .setContentIntent(pendingIntent)
                 .setFullScreenIntent(pendingIntent, true)
-            startForeground(2, builder.build())
+            startForeground(1, builder.build())
         }
     }
 
@@ -103,6 +99,6 @@ class WeatherAlertService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.stop()
-        mDialogView?.let { mWindowManager?.removeView(mDialogView) }
+        mDialogView.let { mWindowManager.removeView(mDialogView) }
     }
 }

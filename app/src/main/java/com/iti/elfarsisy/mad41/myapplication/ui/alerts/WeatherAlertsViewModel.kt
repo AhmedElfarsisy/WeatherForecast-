@@ -6,27 +6,28 @@ import com.iti.elfarsisy.mad41.myapplication.data.model.WeatherAlertsLocal
 import com.iti.elfarsisy.mad41.myapplication.data.repo.IWeatherRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.SavedPlacesRepo
 import com.iti.elfarsisy.mad41.myapplication.data.repo.UserSettingRepo
+import com.iti.elfarsisy.mad41.myapplication.helper.*
 import com.iti.elfarsisy.mad41.myapplication.util.MyAlertScheduler
-import com.iti.elfarsisy.mad41.myapplication.util.MyApplication
 import kotlinx.coroutines.*
-import timber.log.Timber
 
 class WeatherAlertsViewModel(
     private val weatherRepo: IWeatherRepo,
     private val alertsRepo: SavedPlacesRepo,
-   private val userSettingRepo: UserSettingRepo,
-   private val requireActivity: FragmentActivity
+    private val userSettingRepo: UserSettingRepo,
+    private val requireActivity: FragmentActivity
 ) :
     ViewModel() {
     private val alertScheduler = MyAlertScheduler()
     private val _alertAddition = MutableLiveData<Boolean>()
     val alertAddition: LiveData<Boolean> = _alertAddition
     var alertsLocalLive = MediatorLiveData<MutableList<WeatherAlertsLocal>>()
+    val alertTool = MutableLiveData<String>()
+
 
     init {
         fetchAlertsFromLocal()
+        readUserSettings()
     }
-
     fun showAddAlertDialog() {
         _alertAddition.postValue(true)
     }
@@ -58,4 +59,21 @@ class WeatherAlertsViewModel(
     fun dismissAddAlertCompleted() {
         _alertAddition.postValue(false)
     }
+
+    fun setNotificationSetting() {
+        userSettingRepo.write(ALERT_TOOL_KEY, ALERT_NOTIFICATION_VALUE)
+        //update UI
+        readUserSettings()
+    }
+
+    fun setAlertSetting() {
+        userSettingRepo.write(ALERT_TOOL_KEY, ALERT_ALARM_VALUE)
+        //update UI
+        readUserSettings()
+    }
+
+    private fun readUserSettings() {
+        alertTool.value = userSettingRepo.read(ALERT_TOOL_KEY, ALERT_NOTIFICATION_VALUE)
+    }
+
 }
