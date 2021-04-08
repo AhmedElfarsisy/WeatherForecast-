@@ -52,12 +52,9 @@ class WeatherAlertService : Service() {
         mWindowManager?.let { it.addView(mDialogView, params) }
         val dismiss: Button = mDialogView.findViewById(R.id.dismiss_btn)
         weatherDescTV = mDialogView.findViewById(R.id.`weatherِ_alert_textView`)
-
         dismiss.setOnClickListener {
             stopSelf()
         }
-
-
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         mediaPlayer = MediaPlayer.create(this, R.raw.alarmsound)
         mediaPlayer.isLooping = true
